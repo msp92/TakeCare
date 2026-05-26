@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local Cloudflare dev (workerd). Do not commit .dev.vars.
+# Use the Supabase anon/public key only — never service_role.
+SUPABASE_URL=###
+SUPABASE_KEY=###
