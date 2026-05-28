@@ -295,25 +295,25 @@ Deferred to S-01 (upload API + RLS together).
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` completes without SQL errors — e6976dd
-- [x] 1.2 `npx supabase migration list --local` shows `20260527100000_create_core_schema` applied — e6976dd
+- [x] 1.1 `npx supabase db reset` completes without SQL errors — 95269d8
+- [x] 1.2 `npx supabase migration list --local` shows `20260527100000_create_core_schema` applied — 95269d8
 
 #### Manual
 
-- [x] 1.3 Studio shows `uploads`, `extractions`, `reports` with expected columns — e6976dd
-- [x] 1.4 FK to `auth.users` enforced (invalid `user_id` rejected) — e6976dd
+- [x] 1.3 Studio shows `uploads`, `extractions`, `reports` with expected columns — 95269d8
+- [x] 1.4 FK to `auth.users` enforced (invalid `user_id` rejected) — 95269d8
 
 ### Phase 2: Row Level Security policies
 
 #### Automated
 
-- [ ] 2.1 `npx supabase db reset` succeeds with RLS migration
+- [x] 2.1 `npx supabase db reset` succeeds with RLS migration — f9c91a0
 
 #### Manual
 
-- [ ] 2.2 User A cannot SELECT User B rows on all three tables
-- [ ] 2.3 INSERT/UPDATE with mismatched `user_id` fails
-- [ ] 2.4 DELETE as authenticated user denied (expected until S-01)
+- [x] 2.2 User A cannot SELECT User B rows on all three tables — f9c91a0
+- [x] 2.3 INSERT/UPDATE with mismatched `user_id` fails — f9c91a0
+- [x] 2.4 DELETE as authenticated user denied (expected until S-01) — f9c91a0
 
 ### Phase 3: Storage bucket and object policies
 
