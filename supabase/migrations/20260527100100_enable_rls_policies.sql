@@ -35,14 +35,26 @@ create policy extractions_insert_own
   on public.extractions
   for insert
   to authenticated
-  with check (user_id = auth.uid());
+  with check (
+    user_id = auth.uid()
+    and exists (
+      select 1 from public.uploads
+      where id = upload_id and user_id = auth.uid()
+    )
+  );
 
 create policy extractions_update_own
   on public.extractions
   for update
   to authenticated
   using (user_id = auth.uid())
-  with check (user_id = auth.uid());
+  with check (
+    user_id = auth.uid()
+    and exists (
+      select 1 from public.uploads
+      where id = upload_id and user_id = auth.uid()
+    )
+  );
 
 -- reports
 create policy reports_select_own

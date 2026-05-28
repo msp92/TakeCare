@@ -133,7 +133,7 @@ This runs all migrations and `supabase/seed.sql` (no seed rows in F-01 — use S
 | API     | `http://127.0.0.1:54321` |
 | Studio  | `http://127.0.0.1:54323` |
 
-Schema and policy details: [context/changes/supabase-schema-rls/plan.md](context/changes/supabase-schema-rls/plan.md).
+Schema and policy details: see `supabase/migrations/` — `20260527100000_create_core_schema.sql`, `20260527100100_enable_rls_policies.sql`, `20260527100200_storage_lab_pdfs_bucket.sql`.
 
 Upload/extraction/report features in the app depend on these migrations — plan them in slice **S-01** (`first-pdf-to-report`). **DELETE** policies for tables and Storage are deferred to S-01.
 

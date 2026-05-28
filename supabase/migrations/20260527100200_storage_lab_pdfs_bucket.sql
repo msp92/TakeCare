@@ -8,7 +8,8 @@ values (
   false,
   52428800, -- 50MiB (aligned with supabase/config.toml file_size_limit)
   array['application/pdf']
-);
+)
+on conflict (id) do nothing;
 
 -- Expected policy behavior (authenticated):
 -- ALLOW: SELECT/INSERT/UPDATE on lab-pdfs/{auth.uid()}/...

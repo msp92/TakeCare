@@ -38,7 +38,7 @@ create index uploads_user_id_created_at_idx
 create index extractions_user_id_idx
   on public.extractions (user_id);
 
-create or replace function public.set_updated_at()
+create function public.set_updated_at()
 returns trigger
 language plpgsql
 as $$
@@ -52,3 +52,11 @@ create trigger uploads_set_updated_at
   before update on public.uploads
   for each row
   execute function public.set_updated_at();
+
+create trigger reports_set_updated_at
+  before update on public.reports
+  for each row
+  execute function public.set_updated_at();
+
+alter table public.uploads
+  add constraint uploads_storage_path_unique unique (storage_path);
