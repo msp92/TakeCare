@@ -332,11 +332,11 @@ Deferred to S-01 (upload API + RLS together).
 
 #### Automated
 
-- [x] 4.1 `npm run lint` passes
-- [x] 4.2 `npx supabase db reset` end-to-end after README/seed changes
+- [x] 4.1 `npm run lint` passes — 1b8e796
+- [x] 4.2 `npx supabase db reset` end-to-end after README/seed changes — 1b8e796
 
 #### Manual
 
-- [x] 4.3 README migration workflow verified by fresh read-through
-- [x] 4.4 Cross-tenant isolation checklist signed off
-- [x] 4.5 S-01 follow-up includes DELETE policy + verification handoff
+- [x] 4.3 README migration workflow verified by fresh read-through — 1b8e796
+- [x] 4.4 Cross-tenant isolation checklist signed off — 1b8e796
+- [x] 4.5 S-01 follow-up includes DELETE policy + verification handoff — 1b8e796
