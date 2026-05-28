@@ -118,6 +118,12 @@ file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
 
+# Bucket created in migration 20260527100200_storage_lab_pdfs_bucket.sql (remote parity).
+# [storage.buckets.lab-pdfs]
+# public = false
+# file_size_limit = "50MiB"
+# allowed_mime_types = ["application/pdf"]
+
 # Allow connections via S3 compatible clients
 [storage.s3_protocol]
 enabled = true

@@ -319,14 +319,14 @@ Deferred to S-01 (upload API + RLS together).
 
 #### Automated
 
-- [ ] 3.1 `npx supabase db reset` applies storage migration
+- [x] 3.1 `npx supabase db reset` applies storage migration — 482f476
 
 #### Manual
 
-- [ ] 3.2 User A can upload/read own PDF under `lab-pdfs/{user_id}/`
-- [ ] 3.3 User A cannot access User B prefix
-- [ ] 3.4 Non-PDF upload rejected
-- [ ] 3.5 Storage policy allow/deny behavior verified for own vs foreign prefixes
+- [x] 3.2 User A can upload/read own PDF under `lab-pdfs/{user_id}/` — 482f476
+- [x] 3.3 User A cannot access User B prefix — 482f476
+- [x] 3.4 Non-PDF upload rejected — 482f476
+- [x] 3.5 Storage policy allow/deny behavior verified for own vs foreign prefixes — 482f476
 
 ### Phase 4: Documentation and local dev alignment
 
