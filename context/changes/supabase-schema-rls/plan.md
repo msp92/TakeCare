@@ -319,24 +319,24 @@ Deferred to S-01 (upload API + RLS together).
 
 #### Automated
 
-- [x] 3.1 `npx supabase db reset` applies storage migration — 482f476
+- [x] 3.1 `npx supabase db reset` applies storage migration — 07a30f6
 
 #### Manual
 
-- [x] 3.2 User A can upload/read own PDF under `lab-pdfs/{user_id}/` — 482f476
-- [x] 3.3 User A cannot access User B prefix — 482f476
-- [x] 3.4 Non-PDF upload rejected — 482f476
-- [x] 3.5 Storage policy allow/deny behavior verified for own vs foreign prefixes — 482f476
+- [x] 3.2 User A can upload/read own PDF under `lab-pdfs/{user_id}/` — 07a30f6
+- [x] 3.3 User A cannot access User B prefix — 07a30f6
+- [x] 3.4 Non-PDF upload rejected — 07a30f6
+- [x] 3.5 Storage policy allow/deny behavior verified for own vs foreign prefixes — 07a30f6
 
 ### Phase 4: Documentation and local dev alignment
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes
-- [ ] 4.2 `npx supabase db reset` end-to-end after README/seed changes
+- [x] 4.1 `npm run lint` passes
+- [x] 4.2 `npx supabase db reset` end-to-end after README/seed changes
 
 #### Manual
 
-- [ ] 4.3 README migration workflow verified by fresh read-through
-- [ ] 4.4 Cross-tenant isolation checklist signed off
-- [ ] 4.5 S-01 follow-up includes DELETE policy + verification handoff
+- [x] 4.3 README migration workflow verified by fresh read-through
+- [x] 4.4 Cross-tenant isolation checklist signed off
+- [x] 4.5 S-01 follow-up includes DELETE policy + verification handoff

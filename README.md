@@ -114,9 +114,30 @@ SUPABASE_KEY=<anon key from CLI output>
 npx supabase stop
 ```
 
-The local Studio UI is available at `http://localhost:54323`.
+The local Studio UI is available at `http://127.0.0.1:54323` (Mailpit for auth emails: `http://127.0.0.1:54324`).
 
-No database tables or migrations are required — this project uses Supabase Auth's built-in `auth.users` table only.
+### Database schema and migrations (F-01)
+
+Lab data lives in Postgres (`uploads`, `extractions`, `reports`) with row-level security, plus a private Storage bucket `lab-pdfs` for PDFs. Migrations are in `supabase/migrations/`.
+
+After `npx supabase start`, apply (or re-apply) the schema:
+
+```bash
+npx supabase db reset
+```
+
+This runs all migrations and `supabase/seed.sql` (no seed rows in F-01 — use Studio or S-01 fixtures).
+
+| Service | Local URL                |
+| ------- | ------------------------ |
+| API     | `http://127.0.0.1:54321` |
+| Studio  | `http://127.0.0.1:54323` |
+
+Schema and policy details: [context/changes/supabase-schema-rls/plan.md](context/changes/supabase-schema-rls/plan.md).
+
+Upload/extraction/report features in the app depend on these migrations — plan them in slice **S-01** (`first-pdf-to-report`). **DELETE** policies for tables and Storage are deferred to S-01.
+
+**Remote project:** link the repo to cloud (`npx supabase link`) and push migrations with `npx supabase db push` before testing with real health data.
 
 ### Using a cloud Supabase project instead
 
