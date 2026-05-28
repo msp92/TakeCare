@@ -1,0 +1,1 @@
+-- No seed data in F-01; use Studio or S-01 test fixtures.
