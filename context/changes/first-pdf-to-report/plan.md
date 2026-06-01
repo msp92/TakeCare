@@ -650,29 +650,29 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [x] 1.1 `npx astro check` passes on `PdfOcr.ts` and `PdfExtractor.ts`
-- [x] 1.2 `npm run lint` passes on changed files
-- [x] 1.3 `tesseract.js` resolves; dev route builds without Workers-env errors
+- [x] 1.1 `npx astro check` passes on `PdfOcr.ts` and `PdfExtractor.ts` — dd627cd
+- [x] 1.2 `npm run lint` passes on changed files — dd627cd
+- [x] 1.3 `tesseract.js` resolves; dev route builds without Workers-env errors — dd627cd
 
 #### Manual
 
-- [x] 1.4 ALAB/Enel Med PDF → `source: "text"`, readable = yes
-- [x] 1.5 Diagnostyka PDF → `source: "ocr"`, readable = yes, recognizable Polish lab text
-- [x] 1.6 OCR worker terminated (no leaked workers across uploads)
-- [x] 1.7 Confirmed Diagnostyka OCR result documented in `change.md` Notes
+- [x] 1.4 ALAB/Enel Med PDF → `source: "text"`, readable = yes — dd627cd
+- [x] 1.5 Diagnostyka PDF → `source: "ocr"`, readable = yes, recognizable Polish lab text — dd627cd
+- [x] 1.6 OCR worker terminated (no leaked workers across uploads) — dd627cd
+- [x] 1.7 Confirmed Diagnostyka OCR result documented in `change.md` Notes — dd627cd
 
 ### Phase 2: Magic Link Authentication
 
 #### Automated
 
-- [x] 2.1 `npx astro check` passes on all auth files
-- [x] 2.2 `npm run lint` passes on changed auth files
+- [x] 2.1 `npx astro check` passes on all auth files — d4283fc
+- [x] 2.2 `npm run lint` passes on changed auth files — d4283fc
 
 #### Manual
 
-- [x] 2.3 Magic Link email in Inbucket; callback lands on `/dashboard`
-- [x] 2.4 Protected routes redirect to `/auth/signin` when signed out
-- [x] 2.5 No password fields visible on any auth page; `/auth/signup` not linked
+- [x] 2.3 Magic Link email in Inbucket; callback lands on `/dashboard` — d4283fc
+- [x] 2.4 Protected routes redirect to `/auth/signin` when signed out — d4283fc
+- [x] 2.5 No password fields visible on any auth page; `/auth/signup` not linked — d4283fc
 
 ### Phase 3: Core Types and Services
 
