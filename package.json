@@ -14,6 +14,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "debug:pdf": "tsx scripts/debug-pdf-parse.ts",
+    "verify:parser": "tsx scripts/verify-parser.ts",
     "deploy": "npm run build:production && wrangler deploy",
     "deploy:staging": "npm run build:staging && wrangler deploy --env staging"
   },

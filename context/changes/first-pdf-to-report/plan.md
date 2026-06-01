@@ -678,13 +678,13 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [ ] 3.1 `npx astro check` passes on `src/types.ts` and `src/lib/services/`
-- [ ] 3.2 `npm run lint` passes on service files
+- [x] 3.1 `npx astro check` passes on `src/types.ts` and `src/lib/services/`
+- [x] 3.2 `npm run lint` passes on service files
 
 #### Manual
 
-- [ ] 3.3 `parseLabText` returns expected `LabItem[]` on Diagnostyka OCR-text fixture; clean-text fixture returns items or `[]` (best-effort)
-- [ ] 3.4 `buildReport` output is human-readable Markdown with a dated section
+- [x] 3.3 `parseLabText` returns expected `LabItem[]` on Diagnostyka OCR-text fixture; clean-text fixture returns items or `[]` (best-effort)
+- [x] 3.4 `buildReport` output is human-readable Markdown with a dated section
 
 ### Phase 4: Upload Pipeline + OCR Review Step
 
