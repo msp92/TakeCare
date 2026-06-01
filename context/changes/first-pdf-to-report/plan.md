@@ -719,8 +719,8 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [x] 6.1 `npx supabase db reset` applies cleanly
-- [x] 6.2 `npx supabase db diff` shows no unexpected changes
+- [x] 6.1 `npx supabase db reset` applies cleanly — 4e34ce7
+- [x] 6.2 `npx supabase db diff` shows no unexpected changes — 4e34ce7
 
 #### Manual
 
