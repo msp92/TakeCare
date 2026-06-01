@@ -704,23 +704,23 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [x] 5.1 `npx astro build` succeeds
-- [x] 5.2 `npx astro check` passes on dashboard and components
-- [x] 5.3 `npm run lint` passes
+- [x] 5.1 `npx astro build` succeeds — 23d818b
+- [x] 5.2 `npx astro check` passes on dashboard and components — 23d818b
+- [x] 5.3 `npm run lint` passes — 23d818b
 
 #### Manual
 
-- [x] 5.4 Dashboard shows `<pre>`-rendered report after a successful upload
-- [x] 5.5 Upload history shows the file with a `succeeded` badge
-- [x] 5.6 Report persists after sign-out + sign-in
-- [x] 5.7 HTML injection in reviewed text renders as escaped text (not executed)
+- [x] 5.4 Dashboard shows `<pre>`-rendered report after a successful upload — 23d818b
+- [x] 5.5 Upload history shows the file with a `succeeded` badge — 23d818b
+- [x] 5.6 Report persists after sign-out + sign-in — 23d818b
+- [x] 5.7 HTML injection in reviewed text renders as escaped text (not executed) — 23d818b
 
 ### Phase 6: DELETE RLS Migration
 
 #### Automated
 
-- [ ] 6.1 `npx supabase db reset` applies cleanly
-- [ ] 6.2 `npx supabase db diff` shows no unexpected changes
+- [x] 6.1 `npx supabase db reset` applies cleanly
+- [x] 6.2 `npx supabase db diff` shows no unexpected changes
 
 #### Manual
 
