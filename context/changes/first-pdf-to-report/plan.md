@@ -678,27 +678,27 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [x] 3.1 `npx astro check` passes on `src/types.ts` and `src/lib/services/`
-- [x] 3.2 `npm run lint` passes on service files
+- [x] 3.1 `npx astro check` passes on `src/types.ts` and `src/lib/services/` — 915fbce
+- [x] 3.2 `npm run lint` passes on service files — 915fbce
 
 #### Manual
 
-- [x] 3.3 `parseLabText` returns expected `LabItem[]` on Diagnostyka OCR-text fixture; clean-text fixture returns items or `[]` (best-effort)
-- [x] 3.4 `buildReport` output is human-readable Markdown with a dated section
+- [x] 3.3 `parseLabText` returns expected `LabItem[]` on Diagnostyka OCR-text fixture; clean-text fixture returns items or `[]` (best-effort) — 915fbce
+- [x] 3.4 `buildReport` output is human-readable Markdown with a dated section — 915fbce
 
 ### Phase 4: Upload Pipeline + OCR Review Step
 
 #### Automated
 
-- [ ] 4.1 `npx astro build` succeeds with no type errors in upload route
-- [ ] 4.2 `npm run lint` passes on upload files
+- [x] 4.1 `npx astro build` succeeds with no type errors in upload route
+- [x] 4.2 `npm run lint` passes on upload files
 
 #### Manual
 
-- [ ] 4.3 ALAB/Enel Med PDF → no review step → `uploads` `succeeded`, `payload.source === 'text'`
-- [ ] 4.4 Diagnostyka PDF → OCR → editable review + required confirmation → `payload.source === 'ocr'`
-- [ ] 4.5 OCR upload blocked until "reviewed" confirmation is checked
-- [ ] 4.6 Non-PDF rejected client-side; empty-parse PDF → `uploads.status: failed` + message
+- [x] 4.3 ALAB/Enel Med PDF → no review step → `uploads` `succeeded`, `payload.source === 'text'`
+- [x] 4.4 Diagnostyka PDF → OCR → editable review + required confirmation → `payload.source === 'ocr'`
+- [x] 4.5 OCR upload blocked until "reviewed" confirmation is checked
+- [x] 4.6 Non-PDF rejected client-side; empty-parse PDF → `uploads.status: failed` + message
 
 ### Phase 5: Report Dashboard
 
