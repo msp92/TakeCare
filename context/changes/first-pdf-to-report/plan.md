@@ -690,15 +690,15 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Automated
 
-- [x] 4.1 `npx astro build` succeeds with no type errors in upload route
-- [x] 4.2 `npm run lint` passes on upload files
+- [x] 4.1 `npx astro build` succeeds with no type errors in upload route — dddb8f0
+- [x] 4.2 `npm run lint` passes on upload files — dddb8f0
 
 #### Manual
 
-- [x] 4.3 ALAB/Enel Med PDF → no review step → `uploads` `succeeded`, `payload.source === 'text'`
-- [x] 4.4 Diagnostyka PDF → OCR → editable review + required confirmation → `payload.source === 'ocr'`
-- [x] 4.5 OCR upload blocked until "reviewed" confirmation is checked
-- [x] 4.6 Non-PDF rejected client-side; empty-parse PDF → `uploads.status: failed` + message
+- [x] 4.3 ALAB/Enel Med PDF → no review step → `uploads` `succeeded`, `payload.source === 'text'` — dddb8f0
+- [x] 4.4 Diagnostyka PDF → OCR → editable review + required confirmation → `payload.source === 'ocr'` — dddb8f0
+- [x] 4.5 OCR upload blocked until "reviewed" confirmation is checked — dddb8f0
+- [x] 4.6 Non-PDF rejected client-side; empty-parse PDF → `uploads.status: failed` + message — dddb8f0
 
 ### Phase 5: Report Dashboard
 
