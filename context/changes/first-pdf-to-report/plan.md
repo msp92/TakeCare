@@ -724,5 +724,5 @@ No automated runner configured. Manual `tsx` equivalents:
 
 #### Manual
 
-- [ ] 6.3 Owner can DELETE their `uploads` row; cross-user DELETE blocked
-- [ ] 6.4 Owner can DELETE their Storage object; cross-user DELETE blocked
+- [x] 6.3 Owner can DELETE their `uploads` row; cross-user DELETE blocked — 4e34ce7
+- [x] 6.4 Owner can DELETE their Storage object; cross-user DELETE blocked — 4e34ce7
