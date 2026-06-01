@@ -1,7 +1,7 @@
 ---
 change_id: first-pdf-to-report
 title: First PDF to report
-status: implementing
+status: implemented
 created: 2026-05-28
 updated: 2026-06-02
 triage_completed: 2026-06-01
