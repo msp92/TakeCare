@@ -1,13 +1,13 @@
 ---
 change_id: first-pdf-to-report
 title: First PDF to report
-status: impl_reviewed
+status: archived
 created: 2026-05-28
-updated: 2026-06-02
+updated: 2026-06-03
 triage_completed: 2026-06-01
 framed: 2026-06-01
 reframed: 2026-06-01
-archived_at: null
+archived_at: 2026-06-03T00:29:57Z
 ---
 
 ## Notes
