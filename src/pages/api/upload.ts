@@ -3,13 +3,15 @@ import { z } from "zod";
 
 import { createClient } from "@/lib/supabase";
 import { processUpload } from "@/lib/services/uploads";
-import type { ExtractionSource } from "@/types";
-
 export const prerender = false;
 
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
+const MAX_EXTRACTED_TEXT_CHARS = 1024 * 1024;
 
-const sourceSchema = z.enum(["text", "ocr"]);
+const uploadFieldsSchema = z.object({
+  extracted_text: z.string().min(1).max(MAX_EXTRACTED_TEXT_CHARS),
+  source: z.enum(["text", "ocr"]),
+});
 
 export const POST: APIRoute = async (context) => {
   const user = context.locals.user;
@@ -34,22 +36,25 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  if (typeof extractedText !== "string" || extractedText.trim().length === 0) {
-    return new Response(JSON.stringify({ error: "extracted_text is required" }), {
+  const fieldsResult = uploadFieldsSchema.safeParse({
+    extracted_text: typeof extractedText === "string" ? extractedText.trim() : "",
+    source: sourceEntry,
+  });
+
+  if (!fieldsResult.success) {
+    const extractedTextTooBig = fieldsResult.error.issues.some(
+      (issue) => issue.path[0] === "extracted_text" && issue.code === "too_big",
+    );
+    const message = extractedTextTooBig
+      ? `extracted_text must be at most ${String(MAX_EXTRACTED_TEXT_CHARS)} characters`
+      : "extracted_text and source are required (source must be text or ocr)";
+    return new Response(JSON.stringify({ error: message }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  const sourceResult = sourceSchema.safeParse(sourceEntry);
-  if (!sourceResult.success) {
-    return new Response(JSON.stringify({ error: "source must be text or ocr" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (fileEntry.type !== "application/pdf") {
+  if (fileEntry.type && fileEntry.type !== "application/pdf") {
     return new Response(JSON.stringify({ error: "File must be a PDF" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -63,10 +68,10 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  const source: ExtractionSource = sourceResult.data;
+  const { extracted_text: validatedText, source } = fieldsResult.data;
 
   try {
-    await processUpload(supabase, user.id, fileEntry, extractedText.trim(), source);
+    await processUpload(supabase, user.id, fileEntry, validatedText, source);
     return context.redirect("/dashboard?status=success");
   } catch (err) {
     const message = err instanceof Error ? err.message : "Upload processing failed";

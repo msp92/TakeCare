@@ -53,13 +53,7 @@ export default defineConfig({
       alias: { "react-dom/server": "react-dom/server.edge" },
     },
     optimizeDeps: {
-      include: [
-        "react",
-        "react-dom",
-        "react-dom/client",
-        "react/jsx-runtime",
-        "pdfjs-dist/legacy/build/pdf.mjs",
-      ],
+      include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "pdfjs-dist/legacy/build/pdf.mjs"],
     },
     ssr: {
       // pdfjs-dist is client-only (Phase 1b); avoid SSR/workerd evaluating it

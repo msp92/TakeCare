@@ -1,9 +1,14 @@
 import type { AstroCookies } from "astro";
+import { z } from "zod";
 
 import { createClient } from "@/lib/supabase";
 
+const ALLOWED_NEXT_PATHS = ["/dashboard", "/upload"] as const;
+
+const emailOtpTypeSchema = z.enum(["signup", "invite", "magiclink", "recovery", "email_change", "email"]);
+
 export function resolveSafeNext(nextParam: string | null): string {
-  if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
+  if (nextParam && (ALLOWED_NEXT_PATHS as readonly string[]).includes(nextParam)) {
     return nextParam;
   }
   return "/dashboard";
@@ -33,9 +38,14 @@ export async function handleAuthCallback(
     const { error } = await supabase.auth.exchangeCodeForSession(params.code);
     authError = error;
   } else if (params.tokenHash && params.type) {
+    const typeResult = emailOtpTypeSchema.safeParse(params.type);
+    if (!typeResult.success) {
+      return "/auth/signin?error=auth_callback_failed";
+    }
+
     const { error } = await supabase.auth.verifyOtp({
       token_hash: params.tokenHash,
-      type: params.type,
+      type: typeResult.data,
     });
     authError = error;
   } else {

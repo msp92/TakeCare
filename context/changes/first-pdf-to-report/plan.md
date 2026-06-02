@@ -616,7 +616,10 @@ No automated runner configured. Manual `tsx` equivalents:
 - Tier 1 (`extractText` + parse + Supabase I/O) is well within budget for ≤ 2-page PDFs.
 - Tier 2 OCR is the heavy path: it runs **client-side** (off the Worker), ~1–3 s/page at
   2.5× scale, in a Web Worker so the UI stays responsive. Tesseract assets (~15 MB) load
-  from CDN on first OCR use and cache in IndexedDB.
+  on first OCR use and cache in IndexedDB. **Implementation note:** `PdfOcr.ts` bundles the
+  worker and non-SIMD LSTM core via Vite `?url` (not jsDelivr) because the SIMD build aborts
+  with `DotProductSSE` in embedded Chromium; `pol` traineddata still loads from
+  `tessdata.projectnaptha.com`.
 - `tesseract.js` and the OCR module are dynamically imported only when the `GARBLED`/`EMPTY`
   fallback fires — no impact on the clean path's bundle or critical path.
 - Consider lazy-loading the `UploadForm` island (`client:idle`/`client:visible`).

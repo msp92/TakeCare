@@ -1,7 +1,7 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
 import { parseLabText } from "@/lib/services/parser";
-import { buildReport } from "@/lib/services/reports";
+import { buildReportSection } from "@/lib/services/reports";
 import type { ExtractionPayload, ExtractionSource } from "@/types";
 
 const BUCKET = "lab-pdfs";
@@ -23,7 +23,7 @@ export async function processUpload(
     throw new Error("PDF must be at most 20 MB");
   }
 
-  if (file.type !== "application/pdf") {
+  if (file.type && file.type !== "application/pdf") {
     throw new Error("File must be a PDF");
   }
 
@@ -50,13 +50,13 @@ export async function processUpload(
   });
 
   if (storageError) {
-    await markUploadFailed(supabase, uploadId, storageError.message);
+    await markUploadFailed(supabase, uploadId);
     throw storageError;
   }
 
   const items = parseLabText(extractedText);
   if (items.length === 0) {
-    await markUploadFailed(supabase, uploadId, "Could not parse any lab results from the extracted text");
+    await cleanupUploadArtifacts(supabase, uploadId, storagePath);
     throw new Error("Could not parse any lab results from the extracted text");
   }
 
@@ -67,45 +67,41 @@ export async function processUpload(
     rawText: extractedText,
   };
 
-  const { error: extractionError } = await supabase.from("extractions").insert({
-    upload_id: uploadId,
-    user_id: userId,
-    payload,
-  });
+  const reportSection = buildReportSection(items);
+  const { data: reportContent, error: rpcError } = (await supabase.rpc("complete_upload_processing", {
+    p_upload_id: uploadId,
+    p_payload: payload,
+    p_report_section: reportSection,
+  })) as { data: string | null; error: PostgrestError | null };
 
-  if (extractionError) {
-    await markUploadFailed(supabase, uploadId, extractionError.message);
-    throw extractionError;
+  if (rpcError) {
+    await cleanupUploadArtifacts(supabase, uploadId, storagePath);
+    throw rpcError;
   }
 
-  let reportContent: string;
-  try {
-    reportContent = await buildReport(supabase, userId, items);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Report build failed";
-    await markUploadFailed(supabase, uploadId, message);
-    throw err;
-  }
-
-  const { error: reportError } = await supabase.from("reports").upsert({
-    user_id: userId,
-    content: reportContent,
-  });
-
-  if (reportError) {
-    await markUploadFailed(supabase, uploadId, reportError.message);
-    throw reportError;
-  }
-
-  const { error: successError } = await supabase.from("uploads").update({ status: "succeeded" }).eq("id", uploadId);
-
-  if (successError) {
-    throw successError;
+  if (typeof reportContent !== "string") {
+    await cleanupUploadArtifacts(supabase, uploadId, storagePath);
+    throw new Error("Upload processing returned an unexpected response");
   }
 
   return { uploadId, reportContent };
 }
 
-async function markUploadFailed(supabase: SupabaseClient, uploadId: string, _message: string): Promise<void> {
-  await supabase.from("uploads").update({ status: "failed" }).eq("id", uploadId);
+async function markUploadFailed(supabase: SupabaseClient, uploadId: string): Promise<void> {
+  const { error } = await supabase.from("uploads").update({ status: "failed" }).eq("id", uploadId);
+
+  if (error) {
+    throw new Error(`Failed to mark upload as failed: ${error.message}`);
+  }
+}
+
+async function cleanupUploadArtifacts(supabase: SupabaseClient, uploadId: string, storagePath: string): Promise<void> {
+  await supabase.from("extractions").delete().eq("upload_id", uploadId);
+  await supabase.storage.from(BUCKET).remove([storagePath]);
+
+  try {
+    await markUploadFailed(supabase, uploadId);
+  } catch {
+    // Best-effort: storage/object cleanup already attempted; status may stay processing.
+  }
 }

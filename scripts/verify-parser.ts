@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { parseLabText } from "../src/lib/services/parser";
-import { buildReport } from "../src/lib/services/reports";
+import { mergeReportContent } from "../src/lib/services/reports";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "fixtures");
 
@@ -17,23 +17,7 @@ function load(name: string): string {
 const ocrItems = parseLabText(load("diagnostyka-ocr.txt"));
 const cleanItems = parseLabText(load("alab-clean.txt"));
 
-const mockSupabase = {
-  from() {
-    return {
-      select() {
-        return {
-          eq() {
-            return {
-              maybeSingle: () => Promise.resolve({ data: null, error: null }),
-            };
-          },
-        };
-      },
-    };
-  },
-};
-
-const report = await buildReport(mockSupabase as never, "user-id", ocrItems);
+const report = mergeReportContent("", ocrItems);
 
 process.stdout.write(`Diagnostyka OCR fixture: ${String(ocrItems.length)} items\n`);
 process.stdout.write(`${JSON.stringify(ocrItems, null, 2)}\n\n`);
