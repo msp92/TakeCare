@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "debug:pdf": "tsx scripts/debug-pdf-parse.ts",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "verify:parser": "tsx scripts/verify-parser.ts",
     "deploy": "npm run build:production && wrangler deploy",
     "deploy:staging": "npm run build:staging && wrangler deploy --env staging"
@@ -47,6 +48,8 @@
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
     "@eslint/js": "^9.29.0",
+    "@napi-rs/canvas": "^1.0.0",
+    "canvas": "^3.2.3",
     "cross-env": "^7.0.3",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.8",
@@ -65,6 +68,7 @@
     "tsx": "^4.22.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.2",
+    "vitest": "^4.1.8",
     "wrangler": "^4.90.0"
   },
   "overrides": {
