@@ -30,7 +30,7 @@ Bootstrap Vitest from zero, write fixture-oracle tests for `parseLabText` and me
 
 `npm test` runs Vitest in Node mode, all tests pass (0 failures), and the run covers:
 
-1. `parseLabText` asserted against 23/28 Diagnostyka oracle items and 4/5 ALAB oracle items (remaining rows skipped with OCR-misread comments).
+1. `parseLabText` asserted against 22/28 Diagnostyka oracle items and 4/5 ALAB oracle items (remaining rows skipped with OCR-misread comments).
 2. Targeted unit tests for date extraction, comma-decimal normalization, dedup, empty text.
 3. `buildReportSection` and `mergeReportContent` tested for empty inputs, N-append ordering, and trailing-whitespace parity with SQL.
 4. A pure `sqlAppend` helper mirroring the RPC `CASE` logic, with one documented divergence test (TS trims current content; SQL does not).
@@ -53,7 +53,7 @@ Four sequential phases: bootstrap → date API → parser fixes → test files. 
 
 ## Critical Implementation Details
 
-**OCR-misread skip policy**: Six oracle rows describe the true lab value, but the fixture text — the real OCR output — contains uncorrectable errors the parser cannot recover without fragile heuristics. These rows are skipped with `it.skip` (not deleted) and a comment naming the OCR artifact. Do not lower the oracle to match the parser; the oracle reflects requirements.
+**OCR-misread skip policy**: Seven oracle rows describe the true lab value, but the fixture text — the real OCR output — contains uncorrectable errors the parser cannot recover without fragile heuristics. These rows are skipped with `it.skip` (not deleted) and a comment naming the OCR artifact. Do not lower the oracle to match the parser; the oracle reflects requirements.
 
 **Known OCR-corruption rows to skip** (verify during Phase 4 — some may auto-pass after fixes):
 
@@ -64,6 +64,7 @@ Four sequential phases: bootstrap → date API → parser fixes → test files. 
 | Diagnostyka | PDW | value | `111` | `11.1` | Decimal merged |
 | Diagnostyka | Niedojrzałe granulocyty IG % | unit | `Y` | `%` | Char misread |
 | Diagnostyka | MCHC | refRange MIN | `310` | `31,0` | Decimal merged |
+| Diagnostyka | PCT % | refRange MAX | `04` | `0,4` | Decimal dropped |
 | ALAB | Kwas moczowy w surowicy | unit | `mgldL` | `mg/dL` | Slash dropped |
 
 **Vitest alias**: use `new URL('./src/', import.meta.url).pathname` (not a bare string) for correct `@/` resolution in the test environment per Vitest docs.
@@ -313,10 +314,11 @@ const DIAG_OCR_SKIP_NAMES_UNITS: Array<[string, string | undefined]> = [
   ["PDW", "fl"],                  // value 111 in fixture; oracle 11.1 (decimal merged)
   ["Niedojrzałe granulocyty IG", "%"], // unit Y in fixture; oracle % (char misread)
   ["MCHC", "g/dl"],              // refRange MIN 310 in fixture; oracle 31,0 (decimal merged)
+  ["PCT", "%"],                  // refRange MAX 04 in fixture; oracle 0,4 (decimal dropped)
 ];
 ```
 
-Assert that the non-skipped oracle items appear in the parser output (strict deep-equal subset check). Verify the count: `parseLabText(text)` should return exactly the number of oracle items minus skipped (23 items).
+Assert that the non-skipped oracle items appear in the parser output (strict deep-equal subset check). Parser still emits rows for OCR-corrupted lines (with wrong field values); assert `parseLabText(text)` length equals oracle item count (28) and 22/28 items deep-equal the oracle.
 
 **Fixture-oracle test — ALAB** (`describe("alab-ocr fixture")`):
 
@@ -405,7 +407,7 @@ const ITEM: LabItem = { name: "CRP", value: "1.0", unit: "mg/L", refRange: "<5",
 - Skipped tests are visible in the Vitest output as "skipped" (not silently absent).
 - The SQL parity divergence test is intentionally asserting `not.toBe` — confirm this is the only test doing so.
 
-**Implementation Note**: If additional fixture rows fail unexpectedly during Phase 4 (beyond the six listed in the skip table), add them to the skip list with a comment identifying the OCR artifact. Do not silently exclude them — the `it.skip` record is important for future work.
+**Implementation Note**: If additional fixture rows fail unexpectedly during Phase 4 (beyond the seven listed in the skip table), add them to the skip list with a comment identifying the OCR artifact. Do not silently exclude them — the `it.skip` record is important for future work.
 
 ---
 
@@ -464,33 +466,33 @@ Deferred to Phase 2 of the test-plan rollout (upload pipeline, mocked Supabase).
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes (no `string | null` type errors)
-- [x] 2.2 `npm run build` passes
+- [x] 2.1 `npm run lint` passes (no `string | null` type errors) — 43d7cb1
+- [x] 2.2 `npm run build` passes — 43d7cb1
 
 #### Manual
 
-- [x] 2.3 Any TS errors from `date: string | null` change reviewed and fixed
+- [x] 2.3 Any TS errors from `date: string | null` change reviewed and fixed — 43d7cb1
 
 ### Phase 3: Parser Bug Fixes
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 3.3 `npm run verify:parser` runs and shows NRBC pair in Diagnostyka output
-- [ ] 3.4 No company-header or methodology lines in either fixture's output
-- [ ] 3.5 Unit and refRange fields populated for `tys/ul` rows in Diagnostyka output
+- [x] 3.3 `npm run verify:parser` runs and shows NRBC pair in Diagnostyka output
+- [x] 3.4 No company-header or methodology lines in either fixture's output
+- [x] 3.5 Unit and refRange fields populated for `tys/ul` rows in Diagnostyka output
 
 ### Phase 4: Test Files
 
 #### Automated
 
-- [ ] 4.1 `npm test` exits 0 — all tests pass
-- [ ] 4.2 `npm run lint` passes on test files
-- [ ] 4.3 `npm run build` passes
+- [x] 4.1 `npm test` exits 0 — all tests pass
+- [x] 4.2 `npm run lint` passes on test files
+- [x] 4.3 `npm run build` passes
 
 #### Manual
 
