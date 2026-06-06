@@ -490,12 +490,12 @@ Deferred to Phase 2 of the test-plan rollout (upload pipeline, mocked Supabase).
 
 #### Automated
 
-- [x] 4.1 `npm test` exits 0 — all tests pass
-- [x] 4.2 `npm run lint` passes on test files
-- [x] 4.3 `npm run build` passes
+- [x] 4.1 `npm test` exits 0 — all tests pass — ac3eeba
+- [x] 4.2 `npm run lint` passes on test files — ac3eeba
+- [x] 4.3 `npm run build` passes — ac3eeba
 
 #### Manual
 
-- [ ] 4.4 `npm run verify:parser` still runs (smoke check no import regressions)
-- [ ] 4.5 Skipped tests visible in Vitest output as "skipped", not silently absent
-- [ ] 4.6 SQL parity divergence test is the only `not.toBe` assertion in `reports.test.ts`
+- [x] 4.4 `npm run verify:parser` still runs (smoke check no import regressions) — ac3eeba
+- [x] 4.5 Skipped tests visible in Vitest output as "skipped", not silently absent — ac3eeba
+- [x] 4.6 SQL parity divergence test is the only `not.toBe` assertion in `reports.test.ts` — ac3eeba
