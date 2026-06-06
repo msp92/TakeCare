@@ -25,14 +25,14 @@ function normalizeDate(raw: string): string {
   return trimmed;
 }
 
-function extractReportDate(text: string): string {
+function extractReportDate(text: string): string | null {
   for (const pattern of DATE_PATTERNS) {
     const match = pattern.exec(text);
     if (match?.[1]) {
       return normalizeDate(match[1]);
     }
   }
-  return new Date().toISOString().slice(0, 10);
+  return null;
 }
 
 function parseTrailingUnitAndRef(rest: string): { unit?: string; refRange?: string } {

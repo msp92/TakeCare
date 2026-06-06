@@ -32,7 +32,7 @@ export interface LabItem {
   value: string;
   unit?: string;
   refRange?: string;
-  date: string;
+  date: string | null;
 }
 
 export interface ExtractionPayload {

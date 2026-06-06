@@ -464,12 +464,12 @@ Deferred to Phase 2 of the test-plan rollout (upload pipeline, mocked Supabase).
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes (no `string | null` type errors)
-- [ ] 2.2 `npm run build` passes
+- [x] 2.1 `npm run lint` passes (no `string | null` type errors)
+- [x] 2.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 2.3 Any TS errors from `date: string | null` change reviewed and fixed
+- [x] 2.3 Any TS errors from `date: string | null` change reviewed and fixed
 
 ### Phase 3: Parser Bug Fixes
 
