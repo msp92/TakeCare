@@ -88,10 +88,10 @@ Add Vitest as a devDependency, create the minimal config, wire npm scripts, and 
 
 **Contract**: `devDependencies` gains `"vitest": "latest"` (run `npm install --save-dev vitest@latest` to resolve the exact version compatible with the existing Vite 7 override). Scripts section gains:
 ```json
-"test": "vitest run",
+"test": "vitest run --passWithNoTests",
 "test:watch": "vitest"
 ```
-and loses `"debug:pdf"`.
+and loses `"debug:pdf"`. Vitest 4 exits code 1 when no test files exist; `--passWithNoTests` is required so `npm test` exits 0 during bootstrap before Phase 4 adds test files.
 
 #### 2. `vitest.config.ts` (new file)
 
@@ -451,14 +451,14 @@ Deferred to Phase 2 of the test-plan rollout (upload pipeline, mocked Supabase).
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes with no new errors
-- [x] 1.2 `npm test` exits 0 (zero-tests config is valid)
-- [x] 1.3 `npm run build` passes
+- [x] 1.1 `npm run lint` passes with no new errors — 67d6cdc
+- [x] 1.2 `npm test` exits 0 (zero-tests config is valid) — 67d6cdc
+- [x] 1.3 `npm run build` passes — 67d6cdc
 
 #### Manual
 
-- [x] 1.4 `npm run test:watch` starts Vitest in watch mode without error
-- [x] 1.5 `npm run debug:pdf` returns "missing script" error (removed)
+- [x] 1.4 `npm run test:watch` starts Vitest in watch mode without error — 67d6cdc
+- [x] 1.5 `npm run debug:pdf` returns "missing script" error (removed) — 67d6cdc
 
 ### Phase 2: Parser Date API — Return null
 

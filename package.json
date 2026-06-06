@@ -48,8 +48,6 @@
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
     "@eslint/js": "^9.29.0",
-    "@napi-rs/canvas": "^1.0.0",
-    "canvas": "^3.2.3",
     "cross-env": "^7.0.3",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.8",
