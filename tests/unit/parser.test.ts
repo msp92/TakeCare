@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import { parseLabText } from "@/lib/services/parser";
 import type { LabItem } from "@/types";
@@ -31,13 +31,24 @@ const DIAG_OCR_SKIP_NAMES_UNITS: [string, string | undefined][] = [
   ["PCT", "%"], // refRange MAX 04 in fixture; oracle 0,4 (decimal dropped)
 ];
 
+// unit mgldL in fixture; oracle mg/dL (slash dropped by OCR)
+const ALAB_OCR_SKIP_NAMES_UNITS: [string, string | undefined][] = [
+  ["Kwas moczowy w surowicy (M45)", "mg/dL"],
+];
+
 function findOracleItem(items: LabItem[], name: string, unit?: string): LabItem | undefined {
   return items.find((item) => item.name === name && item.unit === unit);
 }
 
 describe("diagnostyka-ocr fixture", () => {
-  const { text, expectedItems } = loadFixture("diagnostyka-ocr");
-  const actual = parseLabText(text);
+  let expectedItems: LabItem[];
+  let actual: LabItem[];
+
+  beforeAll(() => {
+    const { text, expectedItems: oracle } = loadFixture("diagnostyka-ocr");
+    expectedItems = oracle;
+    actual = parseLabText(text);
+  });
 
   it("returns one parsed row per oracle item", () => {
     expect(actual).toHaveLength(expectedItems.length);
@@ -54,7 +65,6 @@ describe("diagnostyka-ocr fixture", () => {
       matches++;
     }
     expect(matches).toBe(expectedMatchCount);
-    expect(matches).toBe(22);
   });
 
   it.skip("Monocyty % — OCR decimal dropped (fixture 93; oracle 9.3)", () => {
@@ -83,8 +93,14 @@ describe("diagnostyka-ocr fixture", () => {
 });
 
 describe("alab-ocr fixture", () => {
-  const { text, expectedItems } = loadFixture("alab-ocr");
-  const actual = parseLabText(text);
+  let expectedItems: LabItem[];
+  let actual: LabItem[];
+
+  beforeAll(() => {
+    const { text, expectedItems: oracle } = loadFixture("alab-ocr");
+    expectedItems = oracle;
+    actual = parseLabText(text);
+  });
 
   it("returns one parsed row per oracle item", () => {
     expect(actual).toHaveLength(expectedItems.length);
@@ -92,7 +108,7 @@ describe("alab-ocr fixture", () => {
 
   it("matches oracle for non-OCR-corrupted rows (4/5)", () => {
     for (const exp of expectedItems) {
-      if (exp.name === "Kwas moczowy w surowicy (M45)" && exp.unit === "mg/dL") {
+      if (isOcrSkip(exp, ALAB_OCR_SKIP_NAMES_UNITS)) {
         continue;
       }
       expect(actual).toContainEqual(exp);

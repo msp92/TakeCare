@@ -47,6 +47,10 @@ Bootstrap Vitest from zero, write fixture-oracle tests for `parseLabText` and me
 - `scripts/fixtures/README.md` updates — already updated by the fixture-oracle setup.
 - `pgTAP` for SQL parity — pure TS helper in unit tests only.
 
+### Addendum (2026-06-06, impl review)
+
+`scripts/verify-parser.ts` now loads `alab-ocr.txt` (real-OCR fixture) instead of `alab-clean.txt`; `alab-clean.txt` removed. Aligns the manual dev helper with the Vitest oracle fixture — out of original scope but functionally required once tests standardized on `alab-ocr`.
+
 ## Implementation Approach
 
 Four sequential phases: bootstrap → date API → parser fixes → test files. Each phase must pass lint and build before the next begins. Tests are written last (Phase 4) so the parser is green when test assertions are authored.

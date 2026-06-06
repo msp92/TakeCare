@@ -5,7 +5,7 @@
 - **Scope**: Phase 1 of 4
 - **Date**: 2026-06-06
 - **Commit**: 67d6cdc
-- **Verdict**: NEEDS ATTENTION
+- **Verdict**: APPROVED (after triage)
 - **Findings**: 0 critical, 1 warning, 2 observations
 
 ## Verdicts
@@ -58,4 +58,4 @@
 - **Location**: context/changes/testing-critical-path-pure-logic/plan.md
 - **Detail**: Progress rows 1.1–1.5 carry `— 67d6cdc` suffixes but `plan.md` is modified and unstaged after the phase commit. Expected per implement ritual (SHA lands post-commit); will need a follow-up commit before archive.
 - **Fix**: Stage and commit `plan.md` SHA write-back (or include in Phase 2 opening commit).
-- **Decision**: PENDING
+- **Decision**: FIXED — committed with review-fix follow-up

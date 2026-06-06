@@ -1,7 +1,7 @@
 ---
 change_id: testing-critical-path-pure-logic
 title: Testing critical path pure logic
-status: implemented
+status: impl_reviewed
 created: 2026-06-05
 updated: 2026-06-06
 archived_at: null
