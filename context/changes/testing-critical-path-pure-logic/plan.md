@@ -477,14 +477,14 @@ Deferred to Phase 2 of the test-plan rollout (upload pipeline, mocked Supabase).
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes — 7e41523
+- [x] 3.2 `npm run build` passes — 7e41523
 
 #### Manual
 
-- [x] 3.3 `npm run verify:parser` runs and shows NRBC pair in Diagnostyka output
-- [x] 3.4 No company-header or methodology lines in either fixture's output
-- [x] 3.5 Unit and refRange fields populated for `tys/ul` rows in Diagnostyka output
+- [x] 3.3 `npm run verify:parser` runs and shows NRBC pair in Diagnostyka output — 7e41523
+- [x] 3.4 No company-header or methodology lines in either fixture's output — 7e41523
+- [x] 3.5 Unit and refRange fields populated for `tys/ul` rows in Diagnostyka output — 7e41523
 
 ### Phase 4: Test Files
 

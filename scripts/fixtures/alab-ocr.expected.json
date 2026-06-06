@@ -1,0 +1,46 @@
+{
+  "dates": {
+    "dataWykonaniaBadania": "2026-05-22",
+    "dataPobrania": "2026-05-22 09:29",
+    "dataRejestracji": "2026-05-22 09:48",
+    "dataPrzyjecia": "2026-05-22 12:58",
+    "dataWydania": "2026-05-22 14:22"
+  },
+  "items": [
+    {
+      "name": "Sód w surowicy (035)",
+      "value": "141",
+      "unit": "mmol/L",
+      "refRange": "136—145",
+      "date": "2026-05-22"
+    },
+    {
+      "name": "Wapń całkowity w surowicy (O77)",
+      "value": "9.50",
+      "unit": "mg/dL",
+      "refRange": "8,60—10,00",
+      "date": "2026-05-22"
+    },
+    {
+      "name": "Kwas moczowy w surowicy (M45)",
+      "value": "5.3",
+      "unit": "mg/dL",
+      "refRange": "3,4—7,0",
+      "date": "2026-05-22"
+    },
+    {
+      "name": "TSH (L69)",
+      "value": "2.340",
+      "unit": "mlU/L",
+      "refRange": "0,270—4,200",
+      "date": "2026-05-22"
+    },
+    {
+      "name": "Wolna tyroksyna (FT4) (069)",
+      "value": "0.95",
+      "unit": "ng/dL",
+      "refRange": "0,93—1,70",
+      "date": "2026-05-22"
+    }
+  ]
+}

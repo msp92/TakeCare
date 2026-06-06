@@ -1,0 +1,38 @@
+ALAB Laboratoria Sp. z 0.0
+” m |
+Sprawozdanie z badań laboratoryjnych
+PESEL:
+Data urodzenia: Zleceniodawca:
+Adres: Miejsce odesłania wyniku:
+ldent. pacjenta: Lekarz zlecający:
+Płeć: Data i godz. rejestracji zlecenia: 22-05-2026 09:48
+Objętość zbiórki moczu: Data wykonania badania: 22-05-2026
+Nr/data w księdze prac. diagi
+Biochemia
+Nazwa badania Wynik badania Zakres referencyjny Dokumenty odniesienia
+Materiał: Krew żylna, surowica, data i godz. pobrania: 22-05-2026 09:29 (UNNNNNNIM cata i godz. przyjęcia: 22-05-2026 12:58
+Sód w surowicy (035) 141 mmol/L 136 — 145
+Badanie wykonano na analizatorze Cobas Pro firmy Roche metodą potencjometrii pośredniej
+Wapń całkowity w surowicy (O77) 9,50 mg/dL 8,60 — 10,00
+Badanie wykonano na analizatorze Cobas Pro firmy Roche metodą spektrofotometryczną
+Kwas moczowy w surowicy (M45) 5,3 mgldL 3,4 — 7,0
+Badanie wykonano na analizatorze Cobas Pro firmy Roche metodą spektrofotometryczną
+Wartości pożądane dla osób z wysokim ryzykiem sercowo-naczyniowym zgodnie z Expert consensus for the diagnosis and treatment of patients with
+hyperuricemia and high cardiovascular risk: 2023 update: <5,0 mg/dl (<297.5 umolń).
+W leczeniu dny moczanowej EULAR rekomenduje poziom docelowy <6mg/dl (<357 umol/).
+Immunochemia
+Nazwa badania Wynik badania Zakres referencyjny Dokumenty odniesienia
+Materiał: Krew żylna, surowica, data i godz. pobrania: 22-05-2026 09:29 e data i godz. przyjęcia: 22-05-2026 12:58
+TSH (L69) 2,340 mlU/L 0,270 — 4,200
+Badanie wykonano na analizatorze Cobas Pro firmy Roche metodą elektrochemiluminescencji (ECLIA)
+Wolna tyroksyna (FT4) (069) 0,95 ng/dL 0,93 — 1,70
+Badanie wykonano na analizatorze Cobas Pro firmy Roche metodą elektrochemiluminescencji (ECLIA)
+A — badane cechy i metody akredytowane przez Polskie Centrum Akredytacji; PB - procedura badawcza
+Bez pisemnej zgody Laboratorium sprawozdanie z badań nie może być powielane inaczej jak tylko w całości. Wyniki badań odnoszą się wyłącznie do
+próbki, której rodzaj, data i godzina pobrania, data i godzina przyjęcia do badań są identyfikowane w niniejszym sprawozdaniu.
+Identyfikacja pacjenta odbywa się na podstawie pierwszych 9 cyfr kodu kreskowego (licząc od lewej). 10 cyfra jest cyfrą przeznaczoną dla
+laboratorium. Więcej informacji na stronie: https://sklep.alablaboratoria.pl/922-przygotowanie-do-badania.
+Niniejszy wydruk jest informacją o sprawozdaniu z badania laboratoryjnego. Sprawozdanie zostało sporządzone w postaci elektronicznej i
+podpisane kwas kowanym podpisem dronicznym
+Autoryzowal:
+O /  "Ć———— Data godzina wydania 22-05-2026 14.2, srona 1/1
