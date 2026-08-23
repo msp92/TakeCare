@@ -12,6 +12,11 @@ const LAB_ROW =
 
 const REF_RANGE_ONLY = /^[\d]+[,.]?\d*\s*[-–]\s*[\d]+[,.]?\d*$/u;
 
+/** Polish lab ref ranges use comma decimals; normalize OCR dots (e.g. 5.0 → 5,0). */
+function normalizeRefRange(ref: string): string {
+  return ref.replace(/\./g, ",");
+}
+
 function normalizeDate(raw: string): string {
   const trimmed = raw.trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
@@ -25,14 +30,14 @@ function normalizeDate(raw: string): string {
   return trimmed;
 }
 
-function extractReportDate(text: string): string {
+function extractReportDate(text: string): string | null {
   for (const pattern of DATE_PATTERNS) {
     const match = pattern.exec(text);
     if (match?.[1]) {
       return normalizeDate(match[1]);
     }
   }
-  return new Date().toISOString().slice(0, 10);
+  return null;
 }
 
 function parseTrailingUnitAndRef(rest: string): { unit?: string; refRange?: string } {
@@ -48,25 +53,61 @@ function parseTrailingUnitAndRef(rest: string): { unit?: string; refRange?: stri
     if (/^[<>≤≥]/.test(refToken) || REF_RANGE_ONLY.test(refToken)) {
       return {
         unit: beforeRef.length > 0 ? beforeRef : undefined,
-        refRange: refToken,
+        refRange: normalizeRefRange(refToken),
       };
     }
   }
 
-  const rangeMatch = /([\d]+[,.]?\d*\s*[-–]\s*[\d]+[,.]?\d*)\s*$/.exec(trimmed);
+  const rangeMatch = /([\d]+[,.]?\d*\s*[-–—]\s*[\d]+[,.]?\d*)\s*$/.exec(trimmed);
   if (rangeMatch) {
     const beforeRef = trimmed.slice(0, rangeMatch.index).trim();
+    const refRange = rangeMatch[1]
+      .replace(/\s*[-–—]\s*/g, (m) => (m.includes("—") || m.includes("–") ? "—" : "-"))
+      .replace(/\s/g, "");
     return {
       unit: beforeRef.length > 0 ? beforeRef : undefined,
-      refRange: rangeMatch[1].replace(/\s+/g, ""),
+      refRange: normalizeRefRange(refRange),
     };
   }
 
   if (REF_RANGE_ONLY.test(trimmed)) {
-    return { refRange: trimmed.replace(/\s+/g, "") };
+    return { refRange: normalizeRefRange(trimmed.replace(/\s+/g, "")) };
+  }
+
+  const diagnostykaMatch = /^(\S+)\s+([\d,]+\.?\d*)\s+([\d,]+\.?\d*)\s*(?:\(?[LH]\)?)?$/u.exec(trimmed);
+  if (diagnostykaMatch) {
+    return {
+      unit: diagnostykaMatch[1],
+      refRange: normalizeRefRange(`${diagnostykaMatch[2]}-${diagnostykaMatch[3]}`),
+    };
   }
 
   return { unit: trimmed };
+}
+
+function isNoiseLine(line: string): boolean {
+  if (/Sp\.\s*z|ZO\.O\.|S\.A\./i.test(line)) {
+    return true;
+  }
+  if (/^Badanie wykonano/i.test(line)) {
+    return true;
+  }
+  if (/^temp\./i.test(line)) {
+    return true;
+  }
+  if (/^Autoryzow/i.test(line)) {
+    return true;
+  }
+  if (/oddział/i.test(line)) {
+    return true;
+  }
+  if (/^Identyfikacja pacjenta/i.test(line)) {
+    return true;
+  }
+  if (/^Niniejszy wydruk/i.test(line)) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -83,6 +124,10 @@ export function parseLabText(text: string): LabItem[] {
       continue;
     }
 
+    if (isNoiseLine(line)) {
+      continue;
+    }
+
     const match = LAB_ROW.exec(line);
     if (!match) {
       continue;
@@ -90,10 +135,10 @@ export function parseLabText(text: string): LabItem[] {
 
     const name = match[1].trim();
     const value = match[2].replace(",", ".");
-    const trailing = match[3].trim();
+    const trailing = match[3].replace(/[*']/g, "").trim();
     const { unit, refRange } = parseTrailingUnitAndRef(trailing);
 
-    const key = `${name}:${value}`;
+    const key = `${name}:${value}:${unit ?? ""}`;
     if (seen.has(key)) {
       continue;
     }

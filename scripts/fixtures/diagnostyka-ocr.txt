@@ -1,13 +1,66 @@
-DIAGNOSTYKA S.A.
-Data wykonania: 15.03.2024
+Gore m m
+ny podpisem elektronicznym weryfikowanym cert. kwalifikowanym - KIR s.a.
+ -—-—-/ / HE
+LUX MED SP. ZO.O. kod 5
+Szturmowa, 02-678 Warszawa oddział
+Lekkier Oddział Odbiorca wyniku
+Pacjent: Data rej: 03.04.2025 11:25:45
+PESEL:
+Płeć: MĘŻCZYZNA
 
-Morfologia krwi
+Badanie Wynik Jedn. MIN MAX FLAGA
+Morfologia krwi (ICD-9: C55) Data pobrania 2025-04-03 09:29:00
 
-Hemoglobina 14,2 g/dl 12,0-16,0
-Leukocyty 6,5 10*9/l 4,0-10,0
-Płytki krwi 220 10*9/l 150-400
+Data wykonania :03.04.2025 13:18:06
+Leukocyty 6,21 tys/ul* 4,00 10,00
+Neutrofile 2,50 tys/ul* 1,90 7,00
+Limfocyty 2,9 tys/ul* 1,5 4,5
+Monocyty 0,58 tys/ul* 0,10 0,90
+Eozynofile 0,21 tys/ul* 0,05 0,50
+Bazofile 0,04 tys/ul* 0,00 0,10
+Niedojrzałe granulocyty IG 0,01 tys/ul* 0,00 0,07
+Neutrofile 40,3 %'* 45,0 700 L
+Limfocyty 46,2 %'* 250 450 (H
+Monocyty 93 %* 2,0 9,0 H
+Eozynofile 3,4 %* 0,0 5.0
+Bazofile 0,6 %* 0,0 1,0
+Niedojrzałe granulocyty IG 0,20 Y* 0,00 1,00
+Erytrocyty 4,79 mln/ul* 4,60 6,50
+Hemoglobina 14,6 g/dl* 13,5 18,0
+Hematokryt 43,2 %* 40,0 52,0
+MCV 90,2 fl* 80,0 98,0
+MCH 30,5 pg* 27,0 — 32,0
+MCHC 33,8 g/dl* 310 37,0
+Strona: 12 2 Wykonano : 1 - DIAGNOSTYKA S.A
 
-Biochemia
+Autoryzowa : RENE
+Data podpisania dokumentu podpisem elektronicznym : 03.04.2025 13:40:07
 
-Glukoza 92 mg/dl 70-99
-Cholesterol całkowity 198 mg/dl <190
+
+( ) * mę
+ny podpisem elektronicznym weryfikowanym cert. kwalifikowanym - KIR s.a
+-—/ HH HH EHH EEE
+Pacjent: Data ur: | PESEL: EEE
+Badanie Wynik Jedn. MIN MAX FLAGA
+Morfologia krwi (ICD-9: C55) - kontynuacja z poprzedniej Strony p-ta pobrania 2025-04-03 08:29:00
+Data wykonania :03.04.2025 13:18:05"
+
+RDW-SD 38,8 fl* 36,0 47,0
+RDW-CV 11,8 %'* 11,5 14,5
+NRBC 0,00 tys/ul* 0,00 0,01
+NRBC 0,00 %'* 0,00 0,20
+Płytki krwi 273 tys/ul* 150 400
+MPV 9,8 fl* 7,0 12,0
+PCT 0,3 %'* 0,1 04
+PDW 111 fl* 10,0 17,4
+P-LCR 23,9 %'* 19,3 47,1
+
+Badanie wykonano metodą automatyczną na aparacie Sysmex XN 10.
+
+Dot. materiału SUROWICA ŻEL: surowicę uzyskano z krwi żylnej pobranej do probówki z żelem
+separującym, która po odwirowaniu zabezpiecza stabilność rutynowych parametrów przez tydzień w
+
+temp. 2-8*C. Szczegółowe informacje są dostępne u Kierownika Laboratorium.
+Strona: 22 2 Wykonano : 1 - DIAGNOSTYKA SA.
+Autoryzow a - RE
+Data podpisania dokumentu podpisem elektronicznym : 03.04.2025 13:40:07

@@ -14,14 +14,14 @@ function load(name: string): string {
   return readFileSync(join(root, name), "utf8");
 }
 
-const ocrItems = parseLabText(load("diagnostyka-ocr.txt"));
-const cleanItems = parseLabText(load("alab-clean.txt"));
+const diagnostykaItems = parseLabText(load("diagnostyka-ocr.txt"));
+const alabItems = parseLabText(load("alab-ocr.txt"));
 
-const report = mergeReportContent("", ocrItems);
+const report = mergeReportContent("", diagnostykaItems);
 
-process.stdout.write(`Diagnostyka OCR fixture: ${String(ocrItems.length)} items\n`);
-process.stdout.write(`${JSON.stringify(ocrItems, null, 2)}\n\n`);
-process.stdout.write(`ALAB clean fixture: ${String(cleanItems.length)} items\n`);
-process.stdout.write(`${JSON.stringify(cleanItems, null, 2)}\n\n`);
+process.stdout.write(`Diagnostyka OCR fixture: ${String(diagnostykaItems.length)} items\n`);
+process.stdout.write(`${JSON.stringify(diagnostykaItems, null, 2)}\n\n`);
+process.stdout.write(`ALAB OCR fixture: ${String(alabItems.length)} items\n`);
+process.stdout.write(`${JSON.stringify(alabItems, null, 2)}\n\n`);
 process.stdout.write("Sample report section:\n\n");
 process.stdout.write(`${report}\n`);
