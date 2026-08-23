@@ -1,7 +1,7 @@
 ---
 id: user-delete
 title: "S-03: Usuwanie uploadów i raportu przez użytkownika"
-status: implemented
+status: impl_reviewed
 roadmap_slice: S-03
 prd_refs:
   - "§NFR: dane zdrowotne przechowywane wyłącznie w ramach aktywnego konta; użytkownik może usunąć uploady i raporty"
@@ -44,8 +44,6 @@ Polityki RLS DELETE są już gotowe w migracji
 - `DELETE /api/uploads/[id]` — usuwa wiersz `uploads` (FK cascade na
   `extractions`), obiekt PDF z bucketa `lab-pdfs`, następnie przebudowuje
   raport z pozostałych `extractions` lub kasuje go gdy brak uploadów.
-- `DELETE /api/reports` — czyści `reports.content` do `''` (lub kasuje wiersz)
-  bez usuwania uploadów — do rozstrzygnięcia w planie.
 - Przycisk „Usuń" przy każdym uploadu na `dashboard.astro` (komponent React,
   confirm dialog lub inline).
 - Obsługa błędu partial failure (Storage nie usunął — zaloguj, nie blokuj UX).

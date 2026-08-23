@@ -5,6 +5,13 @@ import type { ExtractionPayload } from "@/types";
 
 const BUCKET = "lab-pdfs";
 
+export class UploadNotFoundError extends Error {
+  constructor() {
+    super("Upload not found");
+    this.name = "UploadNotFoundError";
+  }
+}
+
 export async function deleteUpload(supabase: SupabaseClient, userId: string, uploadId: string): Promise<void> {
   const { data: upload, error: fetchError } = await supabase
     .from("uploads")
@@ -18,7 +25,7 @@ export async function deleteUpload(supabase: SupabaseClient, userId: string, upl
   }
 
   if (!upload) {
-    throw new Error("Upload not found");
+    throw new UploadNotFoundError();
   }
 
   const { error: deleteError } = await supabase.from("uploads").delete().eq("id", uploadId).eq("user_id", userId);

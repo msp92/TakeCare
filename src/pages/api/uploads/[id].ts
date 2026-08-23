@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
-import { deleteUpload } from "@/lib/services/deletes";
+import { deleteUpload, UploadNotFoundError } from "@/lib/services/deletes";
 import { createClient } from "@/lib/supabase";
 
 export const prerender = false;
@@ -34,6 +34,13 @@ export const DELETE: APIRoute = async (context) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
+    if (err instanceof UploadNotFoundError) {
+      return new Response(JSON.stringify({ error: "Upload not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const message = err instanceof Error ? err.message : "Delete failed";
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
