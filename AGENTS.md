@@ -43,6 +43,10 @@ Stack: **Vitest 4** in plain Node (@vitest.config.ts). No Miniflare / Workers po
 
 **When adding tests:** keep new pure-logic tests under `tests/unit/`; use fixture-oracle pattern for parser changes; run `npm test && npm run lint && npm run build`.
 
+## Mutation testing
+
+Repo uses Stryker for selective mutation testing on risk-critical modules. Run it only for code covered by the current change or a risk from @context/foundation/test-plan.md. Prefer narrowed scope with `--mutate "path/to/file.ts:start-end"`, and do not chase 100% mutation score. Survived mutants should be reviewed one by one: add an assertion only when the mutant represents a user-visible or business-relevant bug.
+
 ## Coding Style
 
 - TypeScript extends `astro/tsconfigs/strict`; import app code via `@/…` paths.

@@ -29,3 +29,14 @@ pnpm-debug.log*
 
 # cursor files
 .cursor/
+
+# PDF probe outputs and local fixtures (sensitive lab PDFs)
+scripts/output/
+scripts/fixtures/*.pdf
+# stryker temp files
+.stryker-tmp
+reports/
+
+# local OCR / browser debug artifacts
+pol.traineddata
+.playwright-cli/
