@@ -73,7 +73,7 @@ if (supabase && user) {
 
       <section class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
         <h2 class="mb-4 text-lg font-semibold text-white">Recent uploads</h2>
-        <UploadHistory uploads={uploads} />
+        <UploadHistory uploads={uploads} client:load />
       </section>
     </div>
   </div>

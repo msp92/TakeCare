@@ -255,17 +255,17 @@ Add per-upload delete buttons to `UploadHistory` and hydrate the component.
 
 #### Automated
 
-- [x] 2.1 `npm test` passes with new unit tests
+- [x] 2.1 `npm test` passes with new unit tests — d6ae9c3
 
 ### Phase 3: Dashboard UI delete buttons
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 3.3 Delete button with confirm removes the upload and refreshes the report
-- [ ] 3.4 Last upload deletion removes the report
-- [ ] 3.5 Cancelled confirm leaves the upload intact
+- [x] 3.3 Delete button with confirm removes the upload and refreshes the report
+- [x] 3.4 Last upload deletion removes the report
+- [x] 3.5 Cancelled confirm leaves the upload intact
