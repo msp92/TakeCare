@@ -82,7 +82,7 @@ export default function UploadHistory({ uploads }: Props) {
                 type="button"
                 variant="destructive"
                 size="sm"
-                disabled={deletingId !== null}
+                disabled={deletingId === upload.id || upload.status === "processing" || upload.status === "pending"}
                 onClick={() => {
                   void handleDelete(upload.id);
                 }}

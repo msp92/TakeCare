@@ -217,6 +217,7 @@ Add per-upload delete buttons to `UploadHistory` and hydrate the component.
 
 - Report rebuild queries all user extractions and re-renders all sections. For the MVP (<100 uploads per user) this is acceptable. If volumes grow, consider persisting per-upload sections or caching.
 - Rebuild is synchronous in the DELETE request; no queue is needed for MVP.
+- **Concurrent deletes:** No serialization; overlapping DELETE requests each trigger a full rebuild (last upsert wins). Accepted for MVP; revisit with per-user mutex or SQL RPC if reported in production.
 
 ## Migration Notes
 
@@ -266,6 +267,6 @@ Add per-upload delete buttons to `UploadHistory` and hydrate the component.
 
 #### Manual
 
-- [x] 3.3 Delete button with confirm removes the upload and refreshes the report
-- [x] 3.4 Last upload deletion removes the report
-- [x] 3.5 Cancelled confirm leaves the upload intact
+- [x] 3.3 Delete button with confirm removes the upload and refreshes the report — e4d7e37
+- [x] 3.4 Last upload deletion removes the report — e4d7e37
+- [x] 3.5 Cancelled confirm leaves the upload intact — e4d7e37
