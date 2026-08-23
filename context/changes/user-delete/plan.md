@@ -261,8 +261,8 @@ Add per-upload delete buttons to `UploadHistory` and hydrate the component.
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes — e4d7e37
+- [x] 3.2 `npm run build` passes — e4d7e37
 
 #### Manual
 
