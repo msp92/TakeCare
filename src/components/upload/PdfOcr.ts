@@ -1,4 +1,5 @@
 import type { PDFDocumentProxy } from "pdfjs-dist";
+import { createWorker } from "tesseract.js";
 import tesseractCoreLstmUrl from "tesseract.js-core/tesseract-core-lstm.wasm.js?url";
 import tesseractWorkerUrl from "tesseract.js/dist/worker.min.js?url";
 
@@ -42,11 +43,11 @@ export async function ocrPdf(file: File, onProgress?: (percent: number) => void)
   const doc = await openPdfDocument(file);
 
   try {
-    const { createWorker } = await import("tesseract.js");
     const worker = await createWorker("pol", 1, {
       workerPath: tesseractWorkerUrl,
       corePath: TESSERACT_CORE_PATH,
       langPath: LANG_PATH,
+      workerBlobURL: false,
     });
 
     try {
