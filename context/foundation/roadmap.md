@@ -3,7 +3,7 @@ project: TakeCare
 version: 1
 status: draft
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-23
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -29,9 +29,10 @@ TakeCare zamienia rozproszone PDF-y laboratoryjne w jeden longitudinalny raport 
 
 | ID   | Change ID              | Outcome (user can …)                                                                                     | Prerequisites | PRD refs                                      | Status   |
 |------|------------------------|----------------------------------------------------------------------------------------------------------|---------------|-----------------------------------------------|----------|
-| F-01 | `supabase-schema-rls`  | (foundation) tabele Supabase + RLS + bucket Storage gotowe; dane izolowane per konto                    | —             | §NFR, §Access Control                         | ready    |
-| S-01 | `first-pdf-to-report`  | zalogować się przez Magic Link, wgrać PDF i zobaczyć raport Markdown zapisany na koncie                 | F-01          | FR-001, FR-002, FR-003, FR-004, FR-006, US-01 | blocked  |
+| F-01 | `supabase-schema-rls`  | (foundation) tabele Supabase + RLS + bucket Storage gotowe; dane izolowane per konto                    | —             | §NFR, §Access Control                         | done     |
+| S-01 | `first-pdf-to-report`  | zalogować się przez Magic Link, wgrać PDF i zobaczyć raport Markdown zapisany na koncie                 | F-01          | FR-001, FR-002, FR-003, FR-004, FR-006, US-01 | done     |
 | S-02 | `report-refresh`       | wgrać kolejny PDF i zobaczyć zaktualizowany raport Markdown agregujący wszystkie wyniki                  | S-01          | FR-005                                        | proposed |
+| S-03 | `user-delete`          | usunąć upload (PDF + ekstrakcja) oraz cały raport ze swojego konta                                       | S-01          | §NFR (dane zdrowotne), §Access Control        | proposed |
 
 ## Baseline
 
@@ -58,7 +59,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sekwencjonowane pierwsze — bez schematu żaden slice nie ma gdzie zapisywać danych; proste do zaplanowania, nie wymaga decyzji produktowych. Kluczowe: RLS musi być skonfigurowane przed jakimkolwiek testem z prawdziwymi danymi zdrowotnymi.
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -70,12 +71,33 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** F-01
 - **Parallel with:** —
 - **Blockers:** —
+- **Decisions (2026-05-28, zaktualizowane):**
+  - **Placówka v1:** wyłącznie PDF z **Diagnostyka** (jeden layout parsera). **Bez detektora szablonu w MVP** — zakładamy, że użytkownik wgrywa pliki z tego labu; odrzucamy tylko nie-PDF (MIME/typ pliku).
+  - **Fixtures / walidacja:** właściciel dostarcza **dwa preanonimizowane PDF** z tego samego labu (Diagnostyka) do spike’a parsera i testów E2E; nie commitować do repo jeśli zawierają dane wrażliwe — trzymać lokalnie lub w `.gitignore`.
+  - **PDF w MVP:** małe pliki, **max 2 strony**, już **redacted**; pozostały tekst **zaznaczalny** (nie skan) — `unpdf` wystarczy, przetwarzanie **synchroniczne** na Workers bez kolejki na start.
+  - **Ekstrakcja tekstu (Workers):** **`unpdf`** (`extractText`); krótki spike na dostarczonych PDF w Phase 0 planu S-01.
+  - **Anonimizacja:** poza MVP — użytkownik wgrywa **preanonimizowane** pliki. **Presidio** (auto-anonimizacja) — po MVP, osobny serwis; nie w S-01.
 - **Unknowns:**
-  - Który format PDF placówki jest obsługiwany w v1? — Owner: user. Block: yes. (bez tego nie można sprawdzić, czy ekstrakcja działa dla realnych danych)
-  - Która biblioteka do parsowania PDF działa w środowisku Cloudflare Workers? — Owner: TBD (research). Block: yes. (tech-stack.md: "PDF extraction may later need a worker or queue beyond edge limits")
   - Magic Link — mitygacja dostarczalności emaili (resend UX, wybór providera) — Owner: user. Block: no. (PRD Open Q2 — monitorować po launch)
-- **Risk:** Dwa unknowny z Block: yes blokują planowanie. Ekstrakcja PDF na edge jest technicznie niepewna — to najryzywkowniejszy element MVP. Auth scaffold wymaga przełączenia z `signInWithPassword` na `signInWithOtp` (Magic Link); zakres zmiany mały, ale musi trafić do planowania S-01.
-- **Status:** blocked
+- **Risk:** Największe ryzyko to **parser layoutu Diagnostyka** (struktura wyników po `extractText`), nie biblioteka PDF ani rozmiar pliku. Auth: przełączenie `signInWithPassword` → `signInWithOtp`.
+- **Status:** done
+
+### S-03: Usuń upload lub raport
+
+- **Outcome:** user can usunąć wybrany upload (PDF z bucketa + wiersz w `uploads` + powiązana `extractions`) oraz wyczyścić lub usunąć cały raport ze swojego konta; po usunięciu danych nie zostają żadne sieroty w Storage ani bazie
+- **Change ID:** `user-delete`
+- **PRD refs:** §NFR ("użytkownik może usunąć uploady i raporty"), §Access Control
+- **Prerequisites:** S-01
+- **Parallel with:** S-02 (niezależne ścieżki)
+- **Blockers:** —
+- **Decisions:**
+  - Polityki RLS DELETE dla `uploads`, `extractions`, `reports` i bucketa `lab-pdfs` są już w migracji `20260601100000_delete_rls_policies.sql` — nie trzeba nowych migracji SQL.
+  - Usunięcie uploadu: kaskadowe przez FK (`extractions` ON DELETE CASCADE) — wystarczy DELETE na `uploads`; Storage usuwa się jawnie w handlerze.
+  - Raport jest rebuiltowany atomowo przez RPC; po usunięciu wszystkich uploadów raport można skasować lub zostawić pusty — decyzja implementacyjna (propozycja: reset `content` do `''`).
+  - Brak soft-delete w MVP — twarde usunięcie.
+- **Unknowns:** —
+- **Risk:** Storage i baza muszą zostać zsynchronizowane; partial failure (baza OK, Storage nie) → sierota w Storage. Mitigacja: najpierw usuń wiersz DB, potem Storage; przy błędzie Storage zaloguj i zwróć sukces użytkownikowi (PDF jest sierotą bez rekordu — nie wycieknie przez RLS).
+- **Status:** proposed
 
 ### S-02: Dodaj kolejny PDF → raport się aktualizuje
 
@@ -94,13 +116,14 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | Roadmap ID | Change ID             | Suggested issue title                                          | Ready for `/10x-plan` | Notes                                                              |
 |------------|-----------------------|----------------------------------------------------------------|-----------------------|--------------------------------------------------------------------|
 | F-01       | `supabase-schema-rls` | Supabase schema, migrations & RLS for uploads/results/reports  | yes                   | Run `/10x-plan supabase-schema-rls`                                |
-| S-01       | `first-pdf-to-report` | Magic Link login → PDF upload → Markdown report (north star)   | no                    | Zablokowany: rozwiąż Open Q1 + Q2 (format PDF + parsing library)  |
+| S-01       | `first-pdf-to-report` | Magic Link login → PDF upload → Markdown report (north star)   | yes                   | Diagnostyka, `unpdf`, 2× sample PDF, bez detektora szablonu. `/10x-plan first-pdf-to-report` |
 | S-02       | `report-refresh`      | Add PDF → update aggregated Markdown report                    | no                    | Zależy od S-01                                                     |
+| S-03       | `user-delete`         | Delete upload (PDF + extraction) and/or full report            | yes                   | RLS DELETE policies already in DB; run `/10x-plan user-delete`     |
 
 ## Open Roadmap Questions
 
-1. **Który format PDF placówki jest obsługiwany w v1?** — Owner: user. Block: S-01 (FR-002, główne kryterium sukcesu PRD). Bez tej odpowiedzi nie można zwalidować ekstrakcji na realnych danych.
-2. **Która biblioteka do parsowania PDF działa w Cloudflare Workers?** — Owner: TBD (research/spike). Block: S-01 (FR-003). Opcje do sprawdzenia: `pdf-parse`, `pdfjs-dist`, Cloudflare Queue + osobny worker, zewnętrzne API ekstrakcji.
+1. ~~**Który format PDF placówki jest obsługiwany w v1?**~~ **Resolved (2026-05-28):** tylko **Diagnostyka**.
+2. ~~**Która biblioteka do parsowania PDF działa w Cloudflare Workers?**~~ **Resolved (2026-05-28):** **`unpdf`**; spike na 2 dostarczonych PDF Diagnostyka (≤2 strony, tekst zaznaczalny). Odrzucone na v1: `pdf-parse`, surowe `pdfjs-dist`, zewnętrzne API, kolejka async (niepotrzebna przy małych PDF).
 3. **Magic Link — mitygacja dostarczalności emaili (resend UX, wybór providera email)** — Owner: user. Block: nie blokuje planowania; monitorować przy launch. Source: PRD Open Question 2.
 
 ## Parked
@@ -109,12 +132,14 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Rich user profile** — Why parked: poza kontem auth; PRD §Non-Goals.
 - **Non-PDF imports** — Why parked: tylko PDF w v1; PRD §Non-Goals.
 - **Medical imaging (DICOM)** — Why parked: PRD §Non-Goals.
-- **Automatic PDF anonymization** — Why parked: użytkownik dostarcza preanonimizowane pliki; PRD §Non-Goals.
-- **Multi-facility templates** — Why parked: jeden format placówki w v1; PRD §Non-Goals.
+- **Automatic PDF anonymization (Presidio)** — Why parked: użytkownik dostarcza już redacted/preanonimizowane pliki w MVP; Presidio jako osobny serwis po MVP.
+- **Facility template detector** — Why parked: MVP nie odrzuca „obcych” layoutów w runtime — tylko walidacja typu PDF; detekcja szablonu / multi-lab dopiero po MVP.
+- **Multi-facility templates** — Why parked: jeden parser (Diagnostyka) w v1; PRD §Non-Goals.
 - **Broad medical analysis / diagnoza kliniczna** — Why parked: PRD §Non-Goals i Guardrails.
 - **Full comparative analysis** — Why parked: odroczone do v2; PRD §Non-Goals.
 - **Caregiver / clinician access, admin portal** — Why parked: flat single-tenant model only; PRD §Non-Goals.
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when a change is archived.)
+- **F-01: (foundation) Tabele Supabase dla uploadów, wyekstrahowanych wyników (JSON) i raportów Markdown stworzone z migracją SQL; polityki RLS izolują dane per konto użytkownika; bucket Supabase Storage dla plików PDF skonfigurowany i zabezpieczony.** — Archived 2026-06-02 → `context/archive/2026-05-27-supabase-schema-rls/`. Lesson: —.
+- **S-01: user can zalogować się przez Magic Link, wgrać preanonimizowany PDF z obsługiwanej placówki i zobaczyć wygenerowany raport Markdown zapisany na koncie (dostępny w kolejnej sesji)** — Archived 2026-06-03 → `context/archive/2026-05-28-first-pdf-to-report/`. Lesson: —.
