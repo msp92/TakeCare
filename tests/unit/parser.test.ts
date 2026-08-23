@@ -32,9 +32,7 @@ const DIAG_OCR_SKIP_NAMES_UNITS: [string, string | undefined][] = [
 ];
 
 // unit mgldL in fixture; oracle mg/dL (slash dropped by OCR)
-const ALAB_OCR_SKIP_NAMES_UNITS: [string, string | undefined][] = [
-  ["Kwas moczowy w surowicy (M45)", "mg/dL"],
-];
+const ALAB_OCR_SKIP_NAMES_UNITS: [string, string | undefined][] = [["Kwas moczowy w surowicy (M45)", "mg/dL"]];
 
 function findOracleItem(items: LabItem[], name: string, unit?: string): LabItem | undefined {
   return items.find((item) => item.name === name && item.unit === unit);
