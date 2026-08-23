@@ -242,20 +242,20 @@ Add per-upload delete buttons to `UploadHistory` and hydrate the component.
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes
-- [x] 1.2 `npm run build` passes
+- [x] 1.1 `npm run lint` passes — 7b05949
+- [x] 1.2 `npm run build` passes — 7b05949
 
 #### Manual
 
-- [x] 1.3 `DELETE /api/uploads/<id>` returns `200` for an owned upload
-- [x] 1.4 Storage object and extraction are removed after delete
-- [x] 1.5 Report is rebuilt or removed after delete
+- [x] 1.3 `DELETE /api/uploads/<id>` returns `200` for an owned upload — 7b05949
+- [x] 1.4 Storage object and extraction are removed after delete — 7b05949
+- [x] 1.5 Report is rebuilt or removed after delete — 7b05949
 
 ### Phase 2: Report rebuild unit tests
 
 #### Automated
 
-- [ ] 2.1 `npm test` passes with new unit tests
+- [x] 2.1 `npm test` passes with new unit tests
 
 ### Phase 3: Dashboard UI delete buttons
 
