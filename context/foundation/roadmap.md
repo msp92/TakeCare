@@ -3,7 +3,7 @@ project: TakeCare
 version: 1
 status: draft
 created: 2026-05-25
-updated: 2026-08-23
+updated: 2026-08-24
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -31,8 +31,8 @@ TakeCare zamienia rozproszone PDF-y laboratoryjne w jeden longitudinalny raport 
 |------|------------------------|----------------------------------------------------------------------------------------------------------|---------------|-----------------------------------------------|----------|
 | F-01 | `supabase-schema-rls`  | (foundation) tabele Supabase + RLS + bucket Storage gotowe; dane izolowane per konto                    | —             | §NFR, §Access Control                         | done     |
 | S-01 | `first-pdf-to-report`  | zalogować się przez Magic Link, wgrać PDF i zobaczyć raport Markdown zapisany na koncie                 | F-01          | FR-001, FR-002, FR-003, FR-004, FR-006, US-01 | done     |
-| S-02 | `report-refresh`       | wgrać kolejny PDF i zobaczyć zaktualizowany raport Markdown agregujący wszystkie wyniki                  | S-01          | FR-005                                        | proposed |
-| S-03 | `user-delete`          | usunąć upload (PDF + ekstrakcja) oraz cały raport ze swojego konta                                       | S-01          | §NFR (dane zdrowotne), §Access Control        | proposed |
+| S-02 | `report-refresh`       | wgrać kolejny PDF i zobaczyć zaktualizowany raport Markdown agregujący wszystkie wyniki                  | S-01          | FR-005                                        | done     |
+| S-03 | `user-delete`          | usunąć upload (PDF + ekstrakcja) oraz cały raport ze swojego konta                                       | S-01          | §NFR (dane zdrowotne), §Access Control        | done     |
 
 ## Baseline
 
@@ -97,19 +97,22 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Brak soft-delete w MVP — twarde usunięcie.
 - **Unknowns:** —
 - **Risk:** Storage i baza muszą zostać zsynchronizowane; partial failure (baza OK, Storage nie) → sierota w Storage. Mitigacja: najpierw usuń wiersz DB, potem Storage; przy błędzie Storage zaloguj i zwróć sukces użytkownikowi (PDF jest sierotą bez rekordu — nie wycieknie przez RLS).
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: Dodaj kolejny PDF → raport się aktualizuje
 
 - **Outcome:** user can wgrać drugi (i kolejny) PDF i zobaczyć zaktualizowany raport Markdown agregujący wyniki ze wszystkich dotychczasowych uploadów
-- **Change ID:** `report-refresh`
+- **Change ID:** `report-refresh` (brak osobnego change folder — dostarczone w S-01)
 - **PRD refs:** FR-005
 - **Prerequisites:** S-01
-- **Parallel with:** —
+- **Parallel with:** S-03
 - **Blockers:** —
+- **Decisions (2026-08-24):**
+  - Merge kolejnych uploadów w produkcji: RPC `complete_upload_processing` (`supabase/migrations/20260602120000_complete_upload_processing_rpc.sql`) — append sekcji `\n\n` do istniejącego `reports.content`.
+  - Referencja TS do testów parity: `mergeReportContent` w `src/lib/services/reports.ts` (`tests/unit/reports.test.ts`).
 - **Unknowns:** —
-- **Risk:** Sekwencjonowany po S-01 — logika ponownej generacji raportu jest rozszerzeniem S-01; główne ryzyko to poprawna agregacja (merge) wyników z wielu uploadów bez duplikatów badań.
-- **Status:** proposed
+- **Risk:** Znany gap parity TS vs SQL przy trailing whitespace na `reports.content` — udokumentowany w `reports.test.ts`; nie blokuje MVP.
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -117,8 +120,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 |------------|-----------------------|----------------------------------------------------------------|-----------------------|--------------------------------------------------------------------|
 | F-01       | `supabase-schema-rls` | Supabase schema, migrations & RLS for uploads/results/reports  | yes                   | Run `/10x-plan supabase-schema-rls`                                |
 | S-01       | `first-pdf-to-report` | Magic Link login → PDF upload → Markdown report (north star)   | yes                   | Diagnostyka, `unpdf`, 2× sample PDF, bez detektora szablonu. `/10x-plan first-pdf-to-report` |
-| S-02       | `report-refresh`      | Add PDF → update aggregated Markdown report                    | no                    | Zależy od S-01                                                     |
-| S-03       | `user-delete`         | Delete upload (PDF + extraction) and/or full report            | yes                   | RLS DELETE policies already in DB; run `/10x-plan user-delete`     |
+| S-02       | `report-refresh`      | Add PDF → update aggregated Markdown report                    | —                     | Dostarczone w S-01 (`complete_upload_processing` RPC); brak osobnego change |
+| S-03       | `user-delete`         | Delete upload (PDF + extraction) and/or full report            | —                     | Zarchiwizowane → `context/archive/2026-08-23-user-delete/`                  |
 
 ## Open Roadmap Questions
 
@@ -143,3 +146,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) Tabele Supabase dla uploadów, wyekstrahowanych wyników (JSON) i raportów Markdown stworzone z migracją SQL; polityki RLS izolują dane per konto użytkownika; bucket Supabase Storage dla plików PDF skonfigurowany i zabezpieczony.** — Archived 2026-06-02 → `context/archive/2026-05-27-supabase-schema-rls/`. Lesson: —.
 - **S-01: user can zalogować się przez Magic Link, wgrać preanonimizowany PDF z obsługiwanej placówki i zobaczyć wygenerowany raport Markdown zapisany na koncie (dostępny w kolejnej sesji)** — Archived 2026-06-03 → `context/archive/2026-05-28-first-pdf-to-report/`. Lesson: —.
+- **S-02: user can wgrać drugi (i kolejny) PDF i zobaczyć zaktualizowany raport Markdown agregujący wyniki ze wszystkich dotychczasowych uploadów** — Dostarczone w S-01 (2026-06-02, RPC `complete_upload_processing`). Brak osobnego change folder. Lesson: merge wielu uploadów nie wymagał osobnego slice'a implementacyjnego.
+- **S-03: user can usunąć wybrany upload (PDF + ekstrakcja) i zobaczyć przebudowany raport z pozostałych uploadów (lub brak raportu po usunięciu ostatniego)** — Archived 2026-08-24 → `context/archive/2026-08-23-user-delete/`. Lesson: —.

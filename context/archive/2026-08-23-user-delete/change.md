@@ -1,13 +1,14 @@
 ---
 id: user-delete
 title: "S-03: Usuwanie uploadów i raportu przez użytkownika"
-status: impl_reviewed
+status: archived
 roadmap_slice: S-03
 prd_refs:
   - "§NFR: dane zdrowotne przechowywane wyłącznie w ramach aktywnego konta; użytkownik może usunąć uploady i raporty"
   - "§Access Control: flat role model — each user sees only own data"
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
+archived_at: 2026-08-23T23:30:00Z
 ---
 
 ## Plan
