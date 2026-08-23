@@ -1,0 +1,25 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PdfExtractProbe from "@/components/upload/PdfExtractProbe";
+
+const showProbe = import.meta.env.DEV;
+---
+
+{
+  showProbe ? (
+    <Layout title="PDF extract probe (dev)">
+      <div class="bg-cosmic min-h-screen p-8">
+        <h1 class="mb-6 text-center text-2xl font-bold text-white">Two-tier PDF extraction (dev)</h1>
+        <PdfExtractProbe client:load />
+      </div>
+    </Layout>
+  ) : (
+    <html lang="en">
+      <head>
+        <meta http-equiv="refresh" content="0;url=/" />
+        <title>Not found</title>
+      </head>
+      <body />
+    </html>
+  )
+}

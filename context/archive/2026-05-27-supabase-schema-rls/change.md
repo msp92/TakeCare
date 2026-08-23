@@ -1,10 +1,10 @@
 ---
 change_id: supabase-schema-rls
 title: Supabase schema, migrations and RLS (roadmap F-01)
-status: impl_reviewed
+status: archived
 created: 2026-05-27
-updated: 2026-05-28
-archived_at: null
+updated: 2026-06-02
+archived_at: 2026-06-02T23:56:33Z
 ---
 
 ## Notes

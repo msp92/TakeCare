@@ -34,13 +34,13 @@ Wartość TakeCare leży w longitudinalnym widoku wyników i kontekście wizyt �
 End-to-end flow (v1, bez pełnej analizy porównawczej):
 
 1. Użytkownik loguje się przez Magic Link.
-2. Uploaduje preanonimizowany PDF z jednej placówki (obsługiwany format).
+2. Uploaduje preanonimizowany (redacted) PDF z **Diagnostyka** (max 2 strony, tekst zaznaczalny).
 3. System ekstrahuje tekst i zapisuje JSON na koncie użytkownika.
 4. System generuje raport Markdown agregujący badania.
 5. Raport zapisany na koncie — dostępny w kolejnej sesji.
 6. Po dodaniu nowego PDF raport się aktualizuje.
 
-Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
+Sukces = kroki 1–6 działają dla realnego PDF **Diagnostyka** (walidacja na dwóch dostarczonych plikach z tego samego labu).
 
 ### Secondary
 
@@ -51,7 +51,8 @@ Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
 - Dane użytkownika wyizolowane per konto — brak wycieku między tenantami.
 - Tylko preanonimizowane PDF — brak automatycznej anonimizacji w MVP.
 - Raporty są agregacją informacyjną — nie diagnozą ani poradą medyczną.
-- Jeden format PDF / jedna placówka w v1 — bez szablonów innych placówek.
+- Jeden parser: **Diagnostyka** w v1 — bez detektora szablonu w runtime (bez odrzucania „obcych” layoutów poza nie-PDF).
+- PDF: max **2 strony**, już **redacted** przez użytkownika; pozostały tekst **zaznaczalny** (ekstrakcja tekstowa, nie OCR).
 
 **Poza v1 (explicit defer):** Pełna analiza porównawcza tych samych badań w czasie → v2.
 
@@ -65,7 +66,7 @@ Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
 
 #### Acceptance Criteria
 
-- Upload rejects non-PDF or PDFs from unsupported facility templates with a clear error
+- Upload rejects non-PDF with a clear error (MVP: **no** facility template detector — unsupported layouts are out of scope until post-MVP)
 - Extracted JSON is associated only with the uploading user's account
 - Report renders without claiming medical diagnosis or treatment advice
 - If processing fails, the user sees a failure state and no partial report is saved as success
@@ -79,8 +80,8 @@ Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
 
 ### Import & extraction
 
-- FR-002: User can upload a pre-anonymized PDF in the supported single-facility format. Priority: must-have
-  > Socrates: No counter-argument; stands as written. Single-facility wedge accepted for MVP.
+- FR-002: User can upload a pre-anonymized (redacted) PDF from **Diagnostyka** (≤2 pages, selectable text). Priority: must-have
+  > MVP: single parser for Diagnostyka layout; no runtime template detection. Owner supplies two sample PDFs for dev/E2E (not committed if sensitive).
 - FR-003: System can extract text from an uploaded PDF and persist structured JSON on the user's account storage. Priority: must-have
   > Socrates: No counter-argument; stands as written. JSON persistence kept for report regen and future comparison.
 
@@ -98,12 +99,13 @@ Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
 ## Non-Functional Requirements
 
 - Dane zdrowotne przechowywane wyłącznie w ramach aktywnego konta; użytkownik może usunąć uploady i raporty (commitment obserwowalny z zewnątrz).
+- PDF w MVP: `application/pdf`, typowo **≤2 strony**, przetwarzanie **synchroniczne** na Workers (`unpdf`); pliki już **redacted** po stronie użytkownika.
 
 ## Business Logic
 
 System zamienia rozproszone PDF-y laboratoryjne użytkownika w jeden longitudinalny raport Markdown gotowy do wizyty.
 
-**Wejścia (user-facing):** Preanonimizowane PDF-y z obsługiwanej placówki dodane przez użytkownika.
+**Wejścia (user-facing):** Preanonimizowane (redacted) PDF-y **Diagnostyka** (≤2 strony, tekst zaznaczalny) dodane przez użytkownika.
 
 **Wyjście:** Raport Markdown agregujący wyniki ze wszystkich uploadów użytkownika, aktualizowany po każdym nowym PDF.
 
@@ -120,13 +122,14 @@ System zamienia rozproszone PDF-y laboratoryjne użytkownika w jeden longitudina
 - **Rich user profile** — poza kontem auth; brak edycji profilu demograficznego w MVP.
 - **Non-PDF imports** — tylko PDF w v1.
 - **Medical imaging** — brak DICOM/obrazów klinicznych.
-- **Automatic PDF anonymization** — użytkownik dostarcza już preanonimizowane pliki.
-- **Multi-facility templates** — jeden format placówki w v1.
+- **Automatic PDF anonymization (e.g. Presidio)** — użytkownik dostarcza już redacted/preanonimizowane pliki w MVP.
+- **Facility template detector** — brak w MVP; tylko odrzucenie nie-PDF.
+- **Multi-facility templates** — jeden parser (Diagnostyka) w v1.
 - **Broad medical analysis** — brak diagnozy, rekomendacji leczenia, silnika klinicznego.
 - **Full comparative analysis** — odraczone do v2 (v1: opcjonalne surowe side-by-side).
 - **Caregiver / clinician access, admin portal** — single-tenant flat model only.
 
 ## Open Questions
 
-1. **Which medical facility PDF template is the supported v1 format?** — Owner: user. Block: yes for real-world validation of FR-002 and Primary success criteria.
+1. ~~**Which medical facility PDF template is the supported v1 format?**~~ **Resolved:** **Diagnostyka** only; two owner-provided redacted sample PDFs for parser/spike; no template detector in MVP.
 2. **Magic Link onboarding — email deliverability mitigation** — Owner: user. By: before launch. Note: FR-001 Socrates flagged spam/deliverability risk; resend UX and provider choice deferred to implementation.

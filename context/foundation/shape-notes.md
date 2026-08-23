@@ -119,7 +119,7 @@ Sukces = kroki 1–6 działają dla realnego PDF z obsługiwanej placówki.
 
 #### Acceptance Criteria
 
-- Upload rejects non-PDF or PDFs from unsupported facility templates with a clear error
+- Upload rejects non-PDF with a clear error (MVP: no facility template detector; Diagnostyka parser only)
 - Extracted JSON is associated only with the uploading user's account
 - Report renders without claiming medical diagnosis or treatment advice
 - If processing fails, the user sees a failure state and no partial report is saved as success
