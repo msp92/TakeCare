@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 
 import { createClient } from "@/lib/supabase";
+import { formatUploadError } from "@/lib/services/upload-errors";
 import { processUpload } from "@/lib/services/uploads";
 export const prerender = false;
 
@@ -74,7 +75,8 @@ export const POST: APIRoute = async (context) => {
     await processUpload(supabase, user.id, fileEntry, validatedText, source);
     return context.redirect("/dashboard?status=success");
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Upload processing failed";
+    console.warn("Upload processing failed:", err);
+    const message = formatUploadError(err);
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

@@ -6,11 +6,11 @@ export default function ReportDisplay({ content }: Props) {
   if (!content?.trim()) {
     return (
       <p className="text-sm text-blue-100/70">
-        No report yet.{" "}
+        Brak raportu.{" "}
         <a href="/upload" className="text-purple-300 hover:underline">
-          Upload a lab PDF
-        </a>{" "}
-        to start.
+          Wgraj PDF z badaniami
+        </a>
+        , aby zacząć.
       </p>
     );
   }

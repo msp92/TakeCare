@@ -2,10 +2,15 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
 import { parseLabText } from "@/lib/services/parser";
 import { buildReportSection } from "@/lib/services/reports";
+import { formatUnknownError } from "@/lib/utils";
 import type { ExtractionPayload, ExtractionSource } from "@/types";
 
 const BUCKET = "lab-pdfs";
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
+
+function throwStepError(step: string, error: PostgrestError | { message: string }): never {
+  throw new Error(`${step}: ${formatUnknownError(error)}`);
+}
 
 export interface ProcessUploadResult {
   uploadId: string;
@@ -40,7 +45,7 @@ export async function processUpload(
   });
 
   if (insertError) {
-    throw insertError;
+    throwStepError("Nie udało się utworzyć rekordu uploadu", insertError);
   }
 
   const bytes = new Uint8Array(await file.arrayBuffer());
@@ -51,7 +56,7 @@ export async function processUpload(
 
   if (storageError) {
     await markUploadFailed(supabase, uploadId);
-    throw storageError;
+    throwStepError("Nie udało się zapisać PDF w Storage", storageError);
   }
 
   const items = parseLabText(extractedText);
@@ -76,7 +81,7 @@ export async function processUpload(
 
   if (rpcError) {
     await cleanupUploadArtifacts(supabase, uploadId, storagePath);
-    throw rpcError;
+    throwStepError("Nie udało się zakończyć przetwarzania uploadu", rpcError);
   }
 
   if (typeof reportContent !== "string") {

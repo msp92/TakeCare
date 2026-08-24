@@ -6,16 +6,18 @@ const status = Astro.url.searchParams.get("status");
 const message = Astro.url.searchParams.get("message");
 ---
 
-<Layout title="Upload lab PDF">
+<Layout title="Wgraj PDF — TakeCare">
   <div class="bg-cosmic min-h-screen p-4 sm:p-8">
     <div class="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
-      <h1 class="mb-2 text-2xl font-bold text-white">Upload lab PDF</h1>
-      <p class="mb-6 text-sm text-blue-100/70">Pre-anonymized PDF, max 2 pages. Text is extracted on your device.</p>
+      <h1 class="mb-2 text-2xl font-bold text-white">Wgraj PDF z badaniami</h1>
+      <p class="mb-6 text-sm text-blue-100/70">
+        Preanonimizowany PDF, max 2 strony. Tekst jest wyciągany na Twoim urządzeniu.
+      </p>
 
       {
         status === "success" && (
           <p class="mb-4 rounded-lg border border-green-400/30 bg-green-950/30 p-3 text-sm text-green-200">
-            Upload saved. View your report on the dashboard.
+            Upload zapisany. Zobacz raport w panelu.
           </p>
         )
       }
@@ -28,7 +30,7 @@ const message = Astro.url.searchParams.get("message");
       <UploadForm client:load />
 
       <p class="mt-6 text-center text-sm">
-        <a href="/dashboard" class="text-purple-300 hover:underline">Back to dashboard</a>
+        <a href="/dashboard" class="text-purple-300 hover:underline">Wróć do panelu</a>
       </p>
     </div>
   </div>

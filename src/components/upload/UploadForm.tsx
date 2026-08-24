@@ -34,7 +34,7 @@ export default function UploadForm() {
 
     if (selected.type && selected.type !== "application/pdf") {
       setStatus("error");
-      setErrorMessage("Only PDF files are accepted");
+      setErrorMessage("Akceptowane są wyłącznie pliki PDF");
       setFile(null);
       return;
     }
@@ -70,7 +70,7 @@ export default function UploadForm() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!canSubmit) {
+    if (!canSubmit || !file || !source) {
       return;
     }
 
@@ -94,7 +94,7 @@ export default function UploadForm() {
       }
 
       const body = (await response.json()) as { error?: string };
-      setErrorMessage(body.error ?? "Upload failed");
+      setErrorMessage(body.error ?? "Nie udało się zapisać uploadu");
     } catch (err) {
       setErrorMessage(formatUnknownError(err));
     } finally {
@@ -106,7 +106,7 @@ export default function UploadForm() {
     <form className="space-y-4" onSubmit={(e) => void handleSubmit(e)} noValidate>
       <div>
         <label htmlFor="pdf-file" className="mb-1 block text-sm text-blue-100/80">
-          Lab PDF (max 2 pages)
+          PDF z badaniami (max 2 strony)
         </label>
         <input
           id="pdf-file"
@@ -121,21 +121,23 @@ export default function UploadForm() {
 
       {status === "extracting" && (
         <p className="text-sm text-blue-200">
-          {ocrProgress !== null ? `Reading PDF (OCR)… ${String(ocrProgress)}%` : "Extracting text…"}
+          {ocrProgress !== null ? `Odczyt PDF (OCR)… ${String(ocrProgress)}%` : "Wyciąganie tekstu…"}
         </p>
       )}
 
       {status === "ready" && source && (
         <p className="text-sm text-blue-100/80">
-          Extraction:{" "}
-          <span className="font-medium text-purple-200">{source === "ocr" ? "on-device OCR" : "text layer"}</span>
+          Ekstrakcja:{" "}
+          <span className="font-medium text-purple-200">
+            {source === "ocr" ? "OCR na urządzeniu" : "warstwa tekstowa"}
+          </span>
         </p>
       )}
 
       {needsReview && status === "ready" && (
         <div className="space-y-3 rounded-lg border border-amber-400/30 bg-amber-950/20 p-4">
           <p className="text-sm text-amber-100">
-            Text was read by on-device OCR — please verify the values before saving.
+            Tekst został odczytany przez OCR na urządzeniu — sprawdź wartości przed zapisaniem.
           </p>
           <textarea
             id="extracted_text"
@@ -155,14 +157,14 @@ export default function UploadForm() {
                 setReviewConfirmed(e.target.checked);
               }}
             />
-            I&apos;ve reviewed these results
+            Sprawdziłem/am te wyniki
           </label>
         </div>
       )}
 
       {!needsReview && status === "ready" && (
         <details className="rounded-lg border border-white/10 bg-black/20 p-3 text-sm text-blue-100/80">
-          <summary className="cursor-pointer text-purple-200">Preview extracted text</summary>
+          <summary className="cursor-pointer text-purple-200">Podgląd wyciągniętego tekstu</summary>
           <pre className="mt-2 max-h-40 overflow-auto text-xs whitespace-pre-wrap">{extractedText.slice(0, 800)}</pre>
         </details>
       )}
@@ -177,17 +179,17 @@ export default function UploadForm() {
         {uploading ? (
           <span className="flex items-center justify-center gap-2">
             <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-            Uploading…
+            Zapisywanie…
           </span>
         ) : (
           <span className={cn("flex items-center justify-center gap-2", !canSubmit && "opacity-50")}>
             <FileUp className="size-4" />
-            Save upload
+            Zapisz upload
           </span>
         )}
       </Button>
       {!canSubmit && status === "ready" && needsReview && !reviewConfirmed && (
-        <p className="text-xs text-amber-200/80">Confirm review before submitting.</p>
+        <p className="text-xs text-amber-200/80">Potwierdź weryfikację przed wysłaniem.</p>
       )}
     </form>
   );

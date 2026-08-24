@@ -15,9 +15,16 @@ const STATUS_STYLES: Record<UploadStatus, string> = {
   failed: "bg-red-500/20 text-red-200",
 };
 
+const STATUS_LABELS: Record<UploadStatus, string> = {
+  pending: "Oczekuje",
+  processing: "Przetwarzanie",
+  succeeded: "Gotowe",
+  failed: "Błąd",
+};
+
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString();
+    return new Date(iso).toLocaleString("pl-PL");
   } catch {
     return iso;
   }
@@ -28,7 +35,7 @@ export default function UploadHistory({ uploads }: Props) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function handleDelete(uploadId: string) {
-    if (!window.confirm("Delete this upload? This cannot be undone.")) {
+    if (!window.confirm("Usunąć ten upload? Tej operacji nie można cofnąć.")) {
       return;
     }
 
@@ -44,20 +51,20 @@ export default function UploadHistory({ uploads }: Props) {
       const body = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        setError(body.error ?? "Delete failed");
+        setError(body.error ?? "Nie udało się usunąć uploadu");
         return;
       }
 
       window.location.reload();
     } catch {
-      setError("Network error — could not delete upload");
+      setError("Błąd sieci — nie udało się usunąć uploadu");
     } finally {
       setDeletingId(null);
     }
   }
 
   if (uploads.length === 0) {
-    return <p className="text-sm text-blue-100/60">No uploads yet.</p>;
+    return <p className="text-sm text-blue-100/60">Brak uploadów.</p>;
   }
 
   return (
@@ -73,10 +80,8 @@ export default function UploadHistory({ uploads }: Props) {
               <p className="text-xs text-blue-100/50">{formatDate(upload.created_at)}</p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <span
-                className={cn("rounded-full px-2 py-0.5 text-xs font-medium capitalize", STATUS_STYLES[upload.status])}
-              >
-                {upload.status}
+              <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", STATUS_STYLES[upload.status])}>
+                {STATUS_LABELS[upload.status]}
               </span>
               <Button
                 type="button"
@@ -87,7 +92,7 @@ export default function UploadHistory({ uploads }: Props) {
                   void handleDelete(upload.id);
                 }}
               >
-                Delete
+                Usuń
               </Button>
             </div>
           </li>

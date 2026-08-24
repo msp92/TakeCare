@@ -32,12 +32,12 @@ if (supabase && user) {
 }
 ---
 
-<Layout title="Dashboard">
+<Layout title="Panel — TakeCare">
   <div class="bg-cosmic min-h-screen p-4 sm:p-8">
     <div class="mx-auto max-w-3xl space-y-8">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+          <h1 class="text-3xl font-bold text-white">Panel</h1>
           <p class="text-sm text-blue-100/70">{user?.email}</p>
         </div>
         <div class="flex gap-3">
@@ -45,14 +45,14 @@ if (supabase && user) {
             href="/upload"
             class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500"
           >
-            Upload PDF
+            Wgraj PDF
           </a>
           <form method="POST" action="/api/auth/signout">
             <button
               type="submit"
               class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20"
             >
-              Sign out
+              Wyloguj się
             </button>
           </form>
         </div>
@@ -61,18 +61,18 @@ if (supabase && user) {
       {
         status === "success" && (
           <p class="rounded-lg border border-green-400/30 bg-green-950/30 p-3 text-sm text-green-200">
-            Upload processed successfully.
+            Upload przetworzony pomyślnie.
           </p>
         )
       }
 
       <section class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
-        <h2 class="mb-4 text-lg font-semibold text-white">Longitudinal report</h2>
+        <h2 class="mb-4 text-lg font-semibold text-white">Raport badań</h2>
         <ReportDisplay content={reportContent} />
       </section>
 
       <section class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
-        <h2 class="mb-4 text-lg font-semibold text-white">Recent uploads</h2>
+        <h2 class="mb-4 text-lg font-semibold text-white">Ostatnie uploady</h2>
         <UploadHistory uploads={uploads} client:load />
       </section>
     </div>

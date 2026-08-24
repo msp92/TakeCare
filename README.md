@@ -1,197 +1,184 @@
-# 10x Astro Starter
+# TakeCare
 
-![](./public/template.png)
+TakeCare aggregates pre-anonymized laboratory PDFs into a longitudinal Markdown report on your account — material for a doctor visit, not medical advice. Upload PDFs from **Diagnostyka** (≤2 pages, selectable text, already redacted by you), and the app extracts results, stores structured JSON, and builds a report that persists across sessions.
 
-A modern, opinionated starter template for building fast, accessible web applications.
+Product scope and requirements: [`context/foundation/prd.md`](context/foundation/prd.md).
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v6 - Modern web framework with server-first rendering
-- [React](https://react.dev/) v19 - UI library for interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4 - Utility-first CSS framework
-- [Supabase](https://supabase.com/) - Authentication and backend-as-a-service
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Edge deployment runtime
+- [Astro](https://astro.build/) v6 — SSR on Cloudflare Workers
+- [React](https://react.dev/) v19 — interactive islands (upload, dashboard)
+- [TypeScript](https://www.typescriptlang.org/) v5
+- [Tailwind CSS](https://tailwindcss.com/) v4
+- [Supabase](https://supabase.com/) — Magic Link auth, Postgres + RLS, Storage for PDFs
+- [Cloudflare Workers](https://workers.cloudflare.com/) — production runtime
 
 ## Prerequisites
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+- Node.js v22.14.0 (see `.nvmrc`)
+- npm
+- [Docker](https://www.docker.com/) — for local Supabase (~7 GB RAM)
 
 ## Getting Started
 
-1. Clone the repository:
+1. Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
-
-2. Install dependencies:
-
-```bash
+git clone <your-repo-url>
+cd TakeCare
 npm install
 ```
 
-3. Set up Supabase and configure environment variables — see [Supabase Configuration](#supabase-configuration) below.
-
-4. Create a `.dev.vars` file for local Cloudflare dev secrets:
+2. Copy environment files:
 
 ```bash
+cp .env.example .env
 cp .dev.vars.example .dev.vars
 ```
 
-On PowerShell: `Copy-Item .dev.vars.example .dev.vars`
+On PowerShell: `Copy-Item .env.example .env; Copy-Item .dev.vars.example .dev.vars`
 
-5. Run the development server:
+3. Start local Supabase and apply migrations — see [Supabase Configuration](#supabase-configuration).
+
+4. Run the dev server:
 
 ```bash
 npm run dev
 ```
 
+5. Open the app, sign in with Magic Link (check Mailpit at `http://127.0.0.1:54324` locally), upload a Diagnostyka PDF on `/upload`, and view the report on `/dashboard`.
+
 ## Available Scripts
 
-- `npm run dev` - Start development server (Cloudflare workerd runtime)
-- `npm run sync` - Generate Astro types (CI parity)
-- `npm run build` - Build for production
-- `npm run build:staging` / `npm run build:production` - Environment-specific builds
-- `npm run deploy` / `npm run deploy:staging` - Build and deploy to Cloudflare
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint with type-checked rules
-- `npm run lint:fix` - Auto-fix ESLint issues
-- `npm run format` - Run Prettier
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Dev server (Cloudflare workerd runtime) |
+| `npm run sync` | Generate Astro types (CI parity) |
+| `npm run build` | Production build |
+| `npm run build:staging` / `npm run build:production` | Environment-specific builds |
+| `npm run deploy` / `npm run deploy:staging` | Build and deploy to Cloudflare |
+| `npm run preview` | Preview production build |
+| `npm test` | Vitest unit tests (`tests/unit/`) |
+| `npm run test:watch` | Vitest watch mode |
+| `npm run verify:parser` | Manual smoke — print parsed JSON for fixture files |
+| `npm run lint` / `npm run lint:fix` | ESLint with type-checked rules |
+| `npm run format` | Prettier |
 
 ## Project Structure
 
-```md
+```text
 .
+├── context/foundation/     # PRD, roadmap, test plan (10x workflow)
 ├── src/
-│ ├── layouts/ # Astro layouts
-│ ├── pages/ # Astro pages
-│ │ └── api/ # API endpoints
-│ ├── components/ # UI components (Astro & React)
-│ └── assets/ # Static assets
-├── public/ # Public assets
-├── wrangler.jsonc # Cloudflare Workers config
+│   ├── pages/              # Astro routes + API handlers (src/pages/api/)
+│   ├── components/         # Astro + React UI
+│   ├── lib/
+│   │   └── services/       # Parser, uploads, reports, deletes
+│   └── middleware.ts       # Auth session + protected routes
+├── supabase/migrations/    # Schema, RLS, Storage policies, RPC
+├── scripts/fixtures/         # Parser fixture-oracle files
+├── tests/unit/             # Vitest unit tests
+└── wrangler.jsonc          # Cloudflare Workers config
 ```
 
 ## Supabase Configuration
 
-This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** — they are never exposed to the client.
+Environment variables (`SUPABASE_URL`, `SUPABASE_KEY`) are declared in `astro.config.mjs` as **server-only secrets** — never exposed to the client bundle.
 
-### First-time setup (local, no cloud project needed)
+### Local Supabase
 
-Requires [Docker](https://www.docker.com/) and ~7 GB RAM.
-
-1. Create your `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-2. Initialize the local Supabase project (creates a `supabase/` config folder):
-
-```bash
-npx supabase init
-```
-
-3. Start the local stack (downloads Docker images on first run):
+1. Start the stack (migrations are already in `supabase/migrations/`):
 
 ```bash
 npx supabase start
+npx supabase db reset
 ```
 
-4. Copy the credentials printed by the CLI into your `.env` and `.dev.vars`:
+2. Copy credentials from the CLI output into `.env` and `.dev.vars`:
 
-```
+```text
 SUPABASE_URL=http://127.0.0.1:54321
 SUPABASE_KEY=<anon key from CLI output>
 ```
 
-5. To stop the stack when done:
+3. Local services:
 
-```bash
-npx supabase stop
-```
+| Service | URL |
+| --- | --- |
+| API | `http://127.0.0.1:54321` |
+| Studio | `http://127.0.0.1:54323` |
+| Mailpit (Magic Link emails) | `http://127.0.0.1:54324` |
 
-The local Studio UI is available at `http://127.0.0.1:54323` (Mailpit for auth emails: `http://127.0.0.1:54324`).
+Stop when done: `npx supabase stop`
 
-### Database schema and migrations (F-01)
+### Database schema
 
-Lab data lives in Postgres (`uploads`, `extractions`, `reports`) with row-level security, plus a private Storage bucket `lab-pdfs` for PDFs. Migrations are in `supabase/migrations/`.
+Lab data lives in Postgres (`uploads`, `extractions`, `reports`) with row-level security per `user_id`, plus a private Storage bucket `lab-pdfs` for PDFs (`{user_id}/{upload_id}.pdf`).
 
-After `npx supabase start`, apply (or re-apply) the schema:
+Key migrations:
 
-```bash
-npx supabase db reset
-```
+- `20260527100000_create_core_schema.sql` — tables
+- `20260527100100_enable_rls_policies.sql` — RLS SELECT/INSERT/UPDATE
+- `20260527100200_storage_lab_pdfs_bucket.sql` — Storage bucket policies
+- `20260601100000_delete_rls_policies.sql` — DELETE policies (tables + Storage)
+- `20260602120000_complete_upload_processing_rpc.sql` — atomic extraction + report merge
 
-This runs all migrations and `supabase/seed.sql` (no seed rows in F-01 — use Studio or S-01 fixtures).
+### Cloud Supabase project
 
-| Service | Local URL                |
-| ------- | ------------------------ |
-| API     | `http://127.0.0.1:54321` |
-| Studio  | `http://127.0.0.1:54323` |
+Add the same variables to `.env` and `.dev.vars`:
 
-Schema and policy details: see `supabase/migrations/` — `20260527100000_create_core_schema.sql`, `20260527100100_enable_rls_policies.sql`, `20260527100200_storage_lab_pdfs_bucket.sql`.
-
-Upload/extraction/report features in the app depend on these migrations — plan them in slice **S-01** (`first-pdf-to-report`). **DELETE** policies for tables and Storage are deferred to S-01.
-
-**Remote project:** link the repo to cloud (`npx supabase link`) and push migrations with `npx supabase db push` before testing with real health data.
-
-### Using a cloud Supabase project instead
-
-If you prefer to use a hosted Supabase project, add these variables to your `.env` and `.dev.vars` files:
-
-| Variable       | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| `SUPABASE_URL` | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY` | `anon` public key from Supabase dashboard → Settings → API |
-
-```
+```text
 SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_KEY=<anon-key>
 ```
 
-### Email confirmation in local development
+Link and push migrations before using real health data:
 
-By default Supabase requires email confirmation before a user can sign in. To skip this during local development:
+```bash
+npx supabase link
+npx supabase db push
+```
 
-1. Open the Supabase dashboard for your project
-2. Go to **Authentication → Email → Confirm email**
-3. Toggle it **off**
-
-Users can then sign in immediately after sign-up without clicking a confirmation link.
+Configure **Authentication → URL Configuration** with your app origin and `/auth/callback` redirect.
 
 ### Auth routes
 
-| Route                 | Description                                                             |
-| --------------------- | ----------------------------------------------------------------------- |
-| `/auth/signin`        | Email/password sign-in form                                             |
-| `/auth/signup`        | Email/password sign-up form                                             |
-| `/auth/confirm-email` | Post-signup "check your inbox" page                                     |
-| `/dashboard`          | Example protected page (redirects to `/auth/signin` if unauthenticated) |
+| Route | Description |
+| --- | --- |
+| `/auth/signin` | Magic Link sign-in (email only) |
+| `/auth/confirm-email` | “Check your inbox” after OTP sent |
+| `/auth/callback` | Magic Link callback (establishes session) |
+| `/upload` | PDF upload (protected) |
+| `/dashboard` | Longitudinal report + upload history (protected) |
 
-Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
+Route protection: `src/middleware.ts` (`PROTECTED_ROUTES`). API handlers also check `context.locals.user`.
+
+## Testing
+
+Test strategy and risk map: [`context/foundation/test-plan.md`](context/foundation/test-plan.md).
+
+```bash
+npm test
+```
+
+Parser changes should use the fixture-oracle pattern under `scripts/fixtures/` — see `tests/unit/parser.test.ts`.
 
 ## Deployment
 
-This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/) (`wrangler.jsonc`, worker name `takecare`). Full runbook: [docs/cloudflare-deployment.md](docs/cloudflare-deployment.md).
+Deploys to [Cloudflare Workers](https://workers.cloudflare.com/) (`wrangler.jsonc`, worker name `takecare`). Full runbook: [docs/cloudflare-deployment.md](docs/cloudflare-deployment.md).
 
-1. Authenticate: `npx wrangler login`
-2. Set runtime secrets: `npx wrangler secret put SUPABASE_URL` and `SUPABASE_KEY` (anon key only)
-3. Deploy production: `npm run deploy` (builds with `CLOUDFLARE_ENV=production`, then `wrangler deploy`)
+1. `npx wrangler login`
+2. `npx wrangler secret put SUPABASE_URL` and `SUPABASE_KEY` (anon key only)
+3. `npm run deploy` — production (`CLOUDFLARE_ENV=production`)
 4. Staging (optional): `npm run deploy:staging` → worker `takecare-staging`
 
-Configure Supabase **Authentication → URL Configuration** with your `*.workers.dev` or custom domain before testing email confirmation in production.
+Production: `https://takecare.msp92.workers.dev` — configure Supabase redirect URLs per [cloudflare-deployment.md](docs/cloudflare-deployment.md).
 
 ## CI
 
-GitHub Actions runs lint + build on every push and PR to `main`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
+GitHub Actions runs lint + build on every push and PR to `main`. Set `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets for the build step.
 
-For auto-deploy on push, connect the repo in Cloudflare Dashboard → Worker `takecare` → Settings → Builds ([workers-builds-setup.md](docs/workers-builds-setup.md)).
-
-Production: `https://takecare.msp92.workers.dev` — configure Supabase redirect URLs per [cloudflare-deployment.md](docs/cloudflare-deployment.md).
+For auto-deploy on push: Cloudflare Dashboard → Worker `takecare` → Settings → Builds ([workers-builds-setup.md](docs/workers-builds-setup.md)).
 
 ## License
 

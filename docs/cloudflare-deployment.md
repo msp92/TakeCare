@@ -104,7 +104,7 @@ The Worker can be healthy while your PC still fails to resolve the hostname (com
 Authentication → URL Configuration (use your production URL from the table above):
 
 - **Site URL:** `https://takecare.msp92.workers.dev`
-- **Redirect URLs:** `https://takecare.msp92.workers.dev/auth/confirm-email`
+- **Redirect URLs:** `https://takecare.msp92.workers.dev/auth/callback`
 
 **Preview policy (recommended — strict):** do not add ephemeral `*.workers.dev` preview URLs unless you need QA on previews; remove when done.
 
@@ -154,6 +154,8 @@ See [custom-domain.md](custom-domain.md).
 
 | Issue | Action |
 | --- | --- |
+| Supabase project was paused | Resume in dashboard; wait 1–2 min; verify **Site URL** and **Redirect URLs** include `/auth/callback`; re-test Magic Link |
+| Magic Link redirects to sign-in with `auth_callback_failed` | Add `https://<your-worker-host>/auth/callback` to Supabase **Redirect URLs** (not `/auth/confirm-email`) |
 | Worker name 409 | Use unique `name` in `wrangler.jsonc` (e.g. `takecare-app`) |
 | SESSION KV deploy error | Already mitigated via null session driver in `astro.config.mjs`; if needed: `npx wrangler kv namespace create SESSION` and add binding |
 | Workers Builds name mismatch | Reconnect Builds after aligning `wrangler.jsonc` `name` with dashboard |
